@@ -1,0 +1,45 @@
+
+[
+  {
+    "id": "scheme-001",
+    "name": "Sample Student Scholarship",
+    "state": "Uttar Pradesh",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "Development record for testing the SchemeWise search interface.",
+    "benefits": [],
+    "eligibility": [],
+    "required_documents": [],
+    "official_url": "",
+    "last_verified": "",
+    "is_sample": true
+  },
+  {
+    "id": "scheme-002",
+    "name": "Sample Education Assistance",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "Development record for testing state and category filters.",
+    "benefits": [],
+    "eligibility": [],
+    "required_documents": [],
+    "official_url": "",
+    "last_verified": "",
+    "is_sample": true
+  },
+  {
+    "id": "scheme-003",
+    "name": "Sample Farmer Support",
+    "state": "All India",
+    "category": "Agriculture",
+    "beneficiary_group": "Farmers",
+    "description": "Development record for testing keyword search.",
+    "benefits": [],
+    "eligibility": [],
+    "required_documents": [],
+    "official_url": "",
+    "last_verified": "",
+    "is_sample": true
+  }
+]

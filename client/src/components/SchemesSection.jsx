@@ -1,3 +1,5 @@
+
+import { useState } from 'react'
 import { Alert, Inbox } from './Icons'
 import SchemeCard from './SchemeCard'
 import { useSchemes } from '../hooks/useSchemes'
@@ -12,13 +14,78 @@ function Skeletons() {
 }
 
 export default function SchemesSection() {
-  const { status, schemes, error, retry } = useSchemes()
+    const [search, setSearch] = useState('')
+  const [stateFilter, setStateFilter] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('')
+  const [groupFilter, setGroupFilter] = useState('')
+ const { status, schemes, error, retry } = useSchemes({
+  search,
+  state: stateFilter,
+  category: categoryFilter,
+  beneficiary_group: groupFilter,
+})
+
+
 
   return (
     <section id="schemes" className="section section--alt" aria-labelledby="schemes-title">
       <div className="container">
         <h2 id="schemes-title" className="section__title">Explore Government Schemes</h2>
         <p className="section__sub">Schemes loaded live from the SchemeWise API. Always confirm details on the official scheme source.</p>
+        
+<div className="scheme-filters">
+  <input
+    type="search"
+    placeholder="Search schemes..."
+    value={search}
+    onChange={(event) => setSearch(event.target.value)}
+    aria-label="Search schemes"
+  />
+
+  <select
+    value={stateFilter}
+    onChange={(event) => setStateFilter(event.target.value)}
+    aria-label="Filter by state"
+  >
+    <option value="">All states</option>
+    <option value="Uttar Pradesh">Uttar Pradesh</option>
+    <option value="All India">All India</option>
+  </select>
+
+  <select
+    value={categoryFilter}
+    onChange={(event) => setCategoryFilter(event.target.value)}
+    aria-label="Filter by category"
+  >
+    <option value="">All categories</option>
+    <option value="Education">Education</option>
+    <option value="Agriculture">Agriculture</option>
+  </select>
+
+  <select
+    value={groupFilter}
+    onChange={(event) => setGroupFilter(event.target.value)}
+    aria-label="Filter by beneficiary group"
+  >
+    <option value="">All beneficiary groups</option>
+    <option value="Students">Students</option>
+    <option value="Farmers">Farmers</option>
+  </select>
+
+  <button
+    type="button"
+    className="btn btn--outline"
+    onClick={() => {
+      setSearch('')
+      setStateFilter('')
+      setCategoryFilter('')
+      setGroupFilter('')
+    }}
+  >
+    Clear filters
+  </button>
+</div>
+
 
         <div aria-live="polite" aria-busy={status === 'loading'}>
           {status === 'loading' && <div className="cards cards--2"><span className="sr-only">Loading schemes…</span><Skeletons /></div>}
