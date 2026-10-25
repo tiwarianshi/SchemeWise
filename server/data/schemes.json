@@ -1,3 +1,4 @@
+
 [
   {
     "id": "scheme-001",
@@ -5,13 +6,22 @@
     "state": "All India",
     "category": "Education",
     "beneficiary_group": "Students",
-    "description": "A central scholarship scheme for eligible college and university students. Refer to the current official guidelines for eligibility and award details.",
+    "description": "A central scholarship scheme for eligible college and university students.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Must meet the applicable academic merit criteria.",
+      "Must satisfy the current official income and other eligibility conditions.",
+      "Must meet the applicable course, institution and scholarship-specific requirements."
+    ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify the current official guidelines before encoding exact criteria."
+    }
   },
   {
     "id": "scheme-002",
@@ -19,13 +29,21 @@
     "state": "All India",
     "category": "Education",
     "beneficiary_group": "Students",
-    "description": "An education scheme for eligible OBC, EBC and DNT students. Consult the official scheme guidelines for the applicable school levels and conditions.",
+    "description": "An education scheme for eligible OBC, EBC and DNT students at covered school levels.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must belong to a community covered by the applicable scheme guidelines.",
+      "Applicant must satisfy the applicable school-level, income and other eligibility conditions."
+    ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify covered communities, school classes, income limits and current scheme status."
+    }
   },
   {
     "id": "scheme-003",
@@ -33,13 +51,21 @@
     "state": "All India",
     "category": "Education",
     "beneficiary_group": "Students",
-    "description": "An education scheme for eligible OBC, EBC and DNT students in covered colleges. Check the official guidelines for institution and applicant requirements.",
+    "description": "An education scheme for eligible OBC, EBC and DNT students in covered higher education institutions.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable community criteria.",
+      "Applicant must meet the covered institution, course, income and other scheme conditions."
+    ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify the current scheme guidelines and covered institutions before adding exact rules."
+    }
   },
   {
     "id": "scheme-004",
@@ -47,13 +73,21 @@
     "state": "All India",
     "category": "Education",
     "beneficiary_group": "Students",
-    "description": "A central education scholarship for eligible SC students. Refer to the official scheme guidelines for admission, income and other conditions.",
+    "description": "A central education scholarship for eligible SC students under the applicable guidelines.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable Scheduled Caste eligibility criteria.",
+      "Applicant must meet the prescribed admission, institution, family income and other conditions."
+    ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify current income thresholds, eligible institutions and other conditions from official guidelines."
+    }
   },
   {
     "id": "scheme-005",
@@ -61,13 +95,21 @@
     "state": "All India",
     "category": "Education",
     "beneficiary_group": "Students",
-    "description": "A scholarship scheme for eligible students with disabilities at the pre-matric level. Check the current official guidelines for eligibility and assistance.",
+    "description": "A scholarship scheme for eligible students with disabilities studying at the applicable pre-matric level.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable disability-related criteria.",
+      "Applicant must meet the prescribed school-level, income and other eligibility conditions."
+    ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify the current disability, school-level, income and certification requirements."
+    }
   },
   {
     "id": "scheme-006",
@@ -75,13 +117,22 @@
     "state": "All India",
     "category": "Education",
     "beneficiary_group": "Students",
-    "description": "A scholarship scheme for eligible students with disabilities pursuing post-matric education. Consult the current official guidelines for the applicable conditions.",
+    "description": "A scholarship scheme for eligible students with disabilities pursuing covered post-matric education.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable disability-related criteria.",
+      "Applicant must be pursuing an eligible course or level of education.",
+      "Applicant must meet the applicable income and other scheme conditions."
+    ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify current course, disability, income and other requirements from official guidelines."
+    }
   },
   {
     "id": "scheme-007",
@@ -89,13 +140,21 @@
     "state": "All India",
     "category": "Education",
     "beneficiary_group": "Students",
-    "description": "A scholarship scheme for eligible students with disabilities pursuing covered higher education. Refer to official guidelines for the conditions and benefits.",
+    "description": "A scholarship scheme for eligible students with disabilities pursuing covered higher education.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable disability-related criteria.",
+      "Applicant must meet the covered higher education, institution, income and other requirements."
+    ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify current eligible institutions, courses, income criteria and disability requirements."
+    }
   },
   {
     "id": "scheme-008",
@@ -103,13 +162,22 @@
     "state": "All India",
     "category": "Education",
     "beneficiary_group": "Students",
-    "description": "A scholarship scheme for eligible students. Check the current official guidelines for school-level, merit and income requirements.",
+    "description": "A scholarship scheme for eligible students subject to the applicable merit, income and school-level conditions.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must meet the applicable class and school requirements.",
+      "Applicant must satisfy the prescribed merit or examination criteria.",
+      "Applicant must meet the applicable family income and other conditions."
+    ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify current class, examination, income and school eligibility requirements."
+    }
   },
   {
     "id": "scheme-009",
@@ -117,15 +185,23 @@
     "state": "All India",
     "category": "Agriculture",
     "beneficiary_group": "Farmers",
-    "description": "A central government scheme providing income support to eligible landholding farmer families, subject to the scheme's rules and exclusions.",
+    "description": "A central government income-support scheme for eligible landholding farmer families, subject to scheme rules and exclusions.",
     "benefits": [
-      "₹6,000 per year, paid in three equal instalments, subject to eligibility and scheme rules."
+      "₹6,000 per year in three equal instalments, subject to eligibility and scheme rules."
     ],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must meet the scheme's applicable landholding farmer-family criteria.",
+      "The farmer family must satisfy applicable exclusion and verification requirements."
+    ],
     "required_documents": [],
     "official_url": "https://www.pmkisan.gov.in/",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify land-record, family, exclusion and registration requirements using current official PM-KISAN guidelines."
+    }
   },
   {
     "id": "scheme-010",
@@ -133,12 +209,21 @@
     "state": "All India",
     "category": "Agriculture",
     "beneficiary_group": "Farmers",
-    "description": "A government crop-insurance scheme. Consult the official portal and applicable notifications for coverage, enrolment conditions and deadlines.",
+    "description": "A government crop-insurance scheme subject to notified crops, areas, seasons and applicable enrolment conditions.",
     "benefits": [],
-    "eligibility": [],
+    "eligibility": [
+      "Applicant must meet the applicable farmer and insurable-interest requirements.",
+      "The crop and location must satisfy the applicable notification for the season.",
+      "Applicant must meet the applicable enrolment deadlines and insurance conditions."
+    ],
     "required_documents": [],
     "official_url": "https://pmfby.gov.in/",
     "last_verified": "2026-10-25",
-    "is_sample": false
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "conditions": [],
+      "verification_note": "Verify current state and season notifications, eligible crops, enrolment conditions and applicable deadlines."
+    }
   }
 ]

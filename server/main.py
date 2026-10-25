@@ -1,12 +1,17 @@
-
 import json
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
+from eligibility import (
+    EligibilityCheckRequest,
+    evaluate_scheme,
+)
+
 app = FastAPI(title="SchemeWise API")
 
+# CORS configuration: allow requests from the local React frontend.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -14,7 +19,7 @@ app.add_middleware(
         "http://127.0.0.1:5173",
     ],
     allow_credentials=False,
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -60,7 +65,6 @@ def get_schemes(
     filtered_schemes = []
 
     for scheme in schemes:
-        # Search across the main descriptive fields.
         searchable_text = " ".join(
             [
                 scheme.get("name", ""),
@@ -117,3 +121,44 @@ def get_scheme(scheme_id: str):
         status_code=404,
         detail="Scheme not found",
     )
+
+
+@app.post("/api/eligibility/check")
+def check_eligibility(
+    request: EligibilityCheckRequest,
+):
+    """
+    Evaluate the user's profile against available scheme rules.
+    """
+
+    try:
+        schemes = load_schemes()
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to load scheme data.",
+        ) from exc
+
+    profile = request.profile
+
+    results = [
+        evaluate_scheme(scheme, profile)
+        for scheme in schemes
+    ]
+
+    counts = {
+        "eligible": 0,
+        "not_eligible": 0,
+        "insufficient_information": 0,
+    }
+
+    for result in results:
+        counts[result["status"]] += 1
+
+    return {
+        "count": len(results),
+        "summary": counts,
+        "results": results,
+    }
