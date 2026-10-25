@@ -54,3 +54,41 @@ export async function fetchSchemes(options = {}) {
 
   return Array.isArray(data?.schemes) ? data.schemes : []
 }
+
+export async function checkEligibility(profile) {
+  let response
+
+  try {
+    response = await fetch(
+      `${API_BASE_URL}/api/eligibility/check`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ profile }),
+      },
+    )
+  } catch (err) {
+    throw new Error(
+      'Could not connect to the SchemeWise backend. Check whether FastAPI is running.',
+      { cause: err },
+    )
+  }
+
+  const data = await response.json().catch(() => ({}))
+
+  if (!response.ok) {
+    const detail = data.detail
+
+    const message = Array.isArray(detail)
+      ? detail.map((item) => item.msg).join(', ')
+      : typeof detail === 'string'
+        ? detail
+        : `Request failed with HTTP ${response.status}.`
+
+    throw new Error(message)
+  }
+
+  return data
+}
