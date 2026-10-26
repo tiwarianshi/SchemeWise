@@ -413,3 +413,9 @@
     flex-direction: column;
   }
 }
+.eligibility-status-explanation {
+  margin: 10px 0 16px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}

@@ -1,4 +1,3 @@
-
 [
   {
     "id": "scheme-001",
@@ -19,8 +18,10 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
-      "verification_note": "Verify the current official guidelines before encoding exact criteria."
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify the current official guidelines and all applicable academic, income, course and institution criteria before encoding structured rules."
     }
   },
   {
@@ -41,8 +42,10 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
-      "verification_note": "Verify covered communities, school classes, income limits and current scheme status."
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify covered communities, school classes, income limits and current scheme status before encoding structured rules."
     }
   },
   {
@@ -63,8 +66,10 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
-      "verification_note": "Verify the current scheme guidelines and covered institutions before adding exact rules."
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify the current scheme guidelines, covered institutions, courses and other applicable criteria before encoding structured rules."
     }
   },
   {
@@ -85,8 +90,10 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
-      "verification_note": "Verify current income thresholds, eligible institutions and other conditions from official guidelines."
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current income thresholds, eligible institutions, admission criteria and other conditions from the official guidelines."
     }
   },
   {
@@ -107,8 +114,10 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
-      "verification_note": "Verify the current disability, school-level, income and certification requirements."
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current disability, school-level, income and certification requirements from official guidelines."
     }
   },
   {
@@ -130,7 +139,9 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
       "verification_note": "Verify current course, disability, income and other requirements from official guidelines."
     }
   },
@@ -152,8 +163,10 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
-      "verification_note": "Verify current eligible institutions, courses, income criteria and disability requirements."
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current eligible institutions, courses, income criteria and disability requirements before encoding structured rules."
     }
   },
   {
@@ -175,8 +188,10 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
-      "verification_note": "Verify current class, examination, income and school eligibility requirements."
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current class, examination, income and school eligibility requirements from official guidelines."
     }
   },
   {
@@ -199,7 +214,9 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
       "verification_note": "Verify land-record, family, exclusion and registration requirements using current official PM-KISAN guidelines."
     }
   },
@@ -222,8 +239,10 @@
     "is_sample": false,
     "eligibility_rules": {
       "rules_complete": false,
-      "conditions": [],
-      "verification_note": "Verify current state and season notifications, eligible crops, enrolment conditions and applicable deadlines."
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current state and season notifications, eligible crops, enrolment conditions and applicable deadlines before encoding structured rules."
     }
   }
 ]

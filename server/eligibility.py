@@ -1,9 +1,11 @@
 from typing import Any, Literal
+import math
 
-from pydantic import BaseModel, Field
-
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 class EligibilityProfile(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     age: int | None = Field(default=None, ge=0, le=120)
 
     state: str | None = None
@@ -21,19 +23,44 @@ class EligibilityProfile(BaseModel):
 
     occupation: str | None = None
 
+    @field_validator("age", mode="before")
+    @classmethod
+    def validate_age(cls, value):
+        if value is None:
+            return None
+
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise ValueError("Age must be a whole number.")
+
+        return value
+
+    @field_validator("annual_family_income", mode="before")
+    @classmethod
+    def validate_income(cls, value):
+        if value is None:
+            return None
+
+        if (
+            isinstance(value, bool)
+            or not isinstance(value, (int, float))
+        ):
+            raise ValueError(
+                "Annual family income must be a number."
+            )
+
+        if not math.isfinite(value):
+            raise ValueError(
+                "Annual family income must be finite."
+            )
+
+        return float(value)
+
 
 class EligibilityCheckRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     profile: EligibilityProfile
 
-
-SUPPORTED_OPERATORS = {
-    "eq",
-    "neq",
-    "gte",
-    "lte",
-    "in",
-    "not_in",
-}
 
 SUPPORTED_FIELDS = {
     "age",
@@ -45,195 +72,377 @@ SUPPORTED_FIELDS = {
     "occupation",
 }
 
+SUPPORTED_OPERATORS = {
+    "eq",
+    "neq",
+    "gte",
+    "lte",
+    "in",
+    "not_in",
+}
+
+MAX_RULE_DEPTH = 12
+MAX_RULE_NODES = 200
+
+
+def normalize(value: Any) -> Any:
+    """Normalize strings for case-insensitive comparison."""
+    if isinstance(value, str):
+        return value.strip().casefold()
+
+    return value
+
 
 def compare_values(
     actual: Any,
     operator: str,
     expected: Any,
 ) -> bool:
-    """
-    Compare a user-provided value against a verified scheme rule.
-    """
+    """Compare compatible, validated values."""
 
-    if operator not in SUPPORTED_OPERATORS:
-        raise ValueError(f"Unsupported operator: {operator}")
+    if operator in {"eq", "neq"}:
+        if isinstance(actual, bool) != isinstance(expected, bool):
+            raise ValueError("Incompatible Boolean value.")
+
+        left = normalize(actual)
+        right = normalize(expected)
+
+        return left == right if operator == "eq" else left != right
+
+    if operator in {"gte", "lte"}:
+        if (
+            isinstance(actual, bool)
+            or isinstance(expected, bool)
+            or not isinstance(actual, (int, float))
+            or not isinstance(expected, (int, float))
+        ):
+            raise ValueError("Numeric values are required.")
+
+        return (
+            actual >= expected
+            if operator == "gte"
+            else actual <= expected
+        )
 
     if operator in {"in", "not_in"}:
-        if not isinstance(expected, list):
-            raise ValueError(
-                f"Operator '{operator}' requires a list value."
-            )
+        if not isinstance(expected, list) or not expected:
+            raise ValueError("A non-empty list is required.")
 
-    if operator == "eq":
-        return actual == expected
+        left = normalize(actual)
+        right = [normalize(item) for item in expected]
 
-    if operator == "neq":
-        return actual != expected
+        matched = left in right
 
-    if operator == "gte":
-        return actual >= expected
-
-    if operator == "lte":
-        return actual <= expected
-
-    if operator == "in":
-        return actual in expected
-
-    if operator == "not_in":
-        return actual not in expected
+        return matched if operator == "in" else not matched
 
     raise ValueError(f"Unsupported operator: {operator}")
+
+
+def evaluate_expression(
+    expression: Any,
+    profile: dict[str, Any],
+    depth: int = 0,
+    budget: list[int] | None = None,
+) -> dict[str, Any]:
+    """
+    Evaluate a rule expression.
+
+    Returns:
+        value: True, False, or None
+        reasons: list of human-readable explanations
+        missing: list of unresolved information
+    """
+
+    if budget is None:
+        budget = [0]
+
+    budget[0] += 1
+
+    if depth > MAX_RULE_DEPTH or budget[0] > MAX_RULE_NODES:
+        return {
+            "value": None,
+            "reasons": [],
+            "missing": ["The eligibility rule structure is too complex."],
+        }
+
+    if not isinstance(expression, dict):
+        return {
+            "value": None,
+            "reasons": [],
+            "missing": ["An eligibility rule has an invalid format."],
+        }
+
+    # A leaf condition.
+    if "field" in expression:
+        field = expression.get("field")
+        operator = expression.get("operator")
+        expected = expression.get("value")
+        description = expression.get("description")
+
+        if expression.get("verified") is not True:
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": [
+                    description or "An eligibility condition is unverified."
+                ],
+            }
+
+        source_url = expression.get("source_url")
+
+        if (
+            not isinstance(source_url, str)
+            or not source_url.startswith("https://")
+        ):
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": [
+                    description or "A verified condition has no valid source."
+                ],
+            }
+
+        if field not in SUPPORTED_FIELDS:
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": [f"Unsupported eligibility field: {field}"],
+            }
+
+        if operator not in SUPPORTED_OPERATORS:
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": [f"Unsupported operator: {operator}"],
+            }
+
+        if "value" not in expression or expected is None:
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": [
+                    description or f"The rule value for '{field}' is missing."
+                ],
+            }
+
+        actual = profile.get(field)
+
+        if actual is None:
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": [
+                    f"Please provide your {field.replace('_', ' ')}."
+                ],
+            }
+
+        try:
+            matched = compare_values(actual, operator, expected)
+        except (TypeError, ValueError):
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": [
+                    description or f"The rule for '{field}' could not be evaluated."
+                ],
+            }
+
+        return {
+            "value": matched,
+            "reasons": [
+                description
+                or f"The condition for '{field}' "
+                + ("is satisfied." if matched else "is not satisfied.")
+            ],
+            "missing": [],
+        }
+
+    # An alternative route: any child may pass.
+    if "any_of" in expression:
+        children = expression["any_of"]
+
+        if not isinstance(children, list) or not children:
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": ["The alternative eligibility routes are incomplete."],
+            }
+
+        results = [
+            evaluate_expression(child, profile, depth + 1, budget)
+            for child in children
+        ]
+
+        if any(result["value"] is True for result in results):
+            value = True
+        elif all(result["value"] is False for result in results):
+            value = False
+        else:
+            value = None
+
+        return {
+            "value": value,
+            "reasons": [
+                reason
+                for result in results
+                for reason in result["reasons"]
+            ],
+            "missing": [
+                item
+                for result in results
+                for item in result["missing"]
+            ],
+        }
+
+    # A mandatory group: every child must pass.
+    if "all_of" in expression:
+        children = expression["all_of"]
+
+        if not isinstance(children, list) or not children:
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": ["The mandatory eligibility rules are incomplete."],
+            }
+
+        results = [
+            evaluate_expression(child, profile, depth + 1, budget)
+            for child in children
+        ]
+
+        if any(result["value"] is False for result in results):
+            value = False
+        elif all(result["value"] is True for result in results):
+            value = True
+        else:
+            value = None
+
+        return {
+            "value": value,
+            "reasons": [
+                reason
+                for result in results
+                for reason in result["reasons"]
+            ],
+            "missing": [
+                item
+                for result in results
+                for item in result["missing"]
+            ],
+        }
+
+    # A conditional requirement:
+    # if the prerequisite is false, the dependent rule does not apply.
+    if "if_then" in expression:
+        conditional = expression["if_then"]
+
+        if (
+            not isinstance(conditional, dict)
+            or "if" not in conditional
+            or "then" not in conditional
+        ):
+            return {
+                "value": None,
+                "reasons": [],
+                "missing": ["The conditional eligibility rule is incomplete."],
+            }
+
+        prerequisite = evaluate_expression(
+            conditional["if"],
+            profile,
+            depth + 1,
+            budget,
+        )
+
+        if prerequisite["value"] is False:
+            return {
+                "value": True,
+                "reasons": [
+                    "The conditional requirement does not apply."
+                ],
+                "missing": [],
+            }
+
+        if prerequisite["value"] is None:
+            return {
+                "value": None,
+                "reasons": prerequisite["reasons"],
+                "missing": prerequisite["missing"],
+            }
+
+        dependent = evaluate_expression(
+            conditional["then"],
+            profile,
+            depth + 1,
+            budget,
+        )
+
+        return {
+            "value": dependent["value"],
+            "reasons": prerequisite["reasons"] + dependent["reasons"],
+            "missing": prerequisite["missing"] + dependent["missing"],
+        }
+
+    return {
+        "value": None,
+        "reasons": [],
+        "missing": [
+            "The rule must contain a condition, all_of, any_of, or if_then."
+        ],
+    }
 
 
 def evaluate_scheme(
     scheme: dict[str, Any],
     profile: EligibilityProfile,
 ) -> dict[str, Any]:
-    """
-    Return one of:
-      - eligible
-      - not_eligible
-      - insufficient_information
+    """Produce a conservative, explainable scheme assessment."""
 
-    A scheme is eligible only when all required conditions
-    are verified, satisfied, and declared complete.
-    """
+    rule_set = scheme.get("eligibility_rules")
 
-    rule_set = scheme.get("eligibility_rules") or {}
+    reasons: list[str] = []
+    missing: list[str] = []
 
-    conditions = rule_set.get("conditions", [])
+    complete = (
+        isinstance(rule_set, dict)
+        and rule_set.get("rules_complete") is True
+    )
 
-    if not isinstance(conditions, list):
-        return {
-            "scheme_id": scheme.get("id"),
-            "scheme_name": scheme.get("name"),
-            "status": "insufficient_information",
-            "reasons": [],
-            "missing_information": [
-                "Eligibility rules have an invalid format."
-            ],
-            "official_url": scheme.get("official_url", ""),
-        }
+    if not isinstance(rule_set, dict):
+        rule_set = {}
 
-    profile_data = profile.model_dump()
+    expression = rule_set.get("rule")
 
-    reasons = []
-    missing_information = []
-    failed_condition = False
+    if not complete:
+        missing.append(
+            "The scheme's complete eligibility rules have not been verified."
+        )
 
-    for condition in conditions:
-        if not isinstance(condition, dict):
-            missing_information.append(
-                "A scheme eligibility condition has an invalid format."
-            )
-            continue
-
-        if not condition.get("verified", False):
-            missing_information.append(
-                condition.get(
-                    "description",
-                    "An eligibility condition has not been verified.",
-                )
-            )
-            continue
-
-        field = condition.get("field")
-        operator = condition.get("operator")
-        expected = condition.get("value")
-
-        if field not in SUPPORTED_FIELDS:
-            missing_information.append(
-                f"Unsupported eligibility field: {field}"
-            )
-            continue
-
-        if operator not in SUPPORTED_OPERATORS:
-            missing_information.append(
-                f"Unsupported eligibility operator: {operator}"
-            )
-            continue
-
-        if "value" not in condition or expected is None:
-            missing_information.append(
-                condition.get(
-                    "description",
-                    f"The verified value for '{field}' is missing.",
-                )
-            )
-            continue
-
-        actual = profile_data.get(field)
-
-        if actual is None:
-            missing_information.append(
-                f"Please provide your {field.replace('_', ' ')}."
-            )
-            continue
-
-        try:
-            matched = compare_values(
-                actual,
-                operator,
-                expected,
-            )
-        except (TypeError, ValueError):
-            missing_information.append(
-                condition.get(
-                    "description",
-                    f"The rule for '{field}' could not be evaluated.",
-                )
-            )
-            continue
-
-        if matched:
-            reasons.append(
-                condition.get(
-                    "description",
-                    f"The condition for '{field}' is satisfied.",
-                )
-            )
-        else:
-            failed_condition = True
-            reasons.append(
-                condition.get(
-                    "description",
-                    f"The condition for '{field}' is not satisfied.",
-                )
-            )
-
-    # A confirmed failed mandatory condition is enough to say
-    # the applicant does not meet that scheme's rules.
-    if failed_condition:
-        status = "not_eligible"
-
-    # Missing, unverified, or incomplete rules must never be
-    # treated as proof that the applicant qualifies.
-    elif (
-        missing_information
-        or not rule_set.get("rules_complete", False)
-        or not conditions
-    ):
-        status = "insufficient_information"
-
-        if not rule_set.get("rules_complete", False):
-            missing_information.append(
-                "The scheme's eligibility rules have not been "
-                "fully verified."
-            )
-
-        if not conditions:
-            missing_information.append(
-                "No verified eligibility conditions are available."
-            )
-
+    if not isinstance(expression, dict):
+        missing.append("No structured eligibility rules are available.")
+        evaluation_value = None
     else:
+        result = evaluate_expression(
+            expression,
+            profile.model_dump(),
+        )
+
+        evaluation_value = result["value"]
+        reasons.extend(result["reasons"])
+        missing.extend(result["missing"])
+
+    if not complete or missing or evaluation_value is None:
+        status = "insufficient_information"
+    elif evaluation_value is True:
         status = "eligible"
+    else:
+        status = "not_eligible"
 
     return {
         "scheme_id": scheme.get("id"),
         "scheme_name": scheme.get("name"),
         "status": status,
-        "reasons": reasons,
-        "missing_information": list(dict.fromkeys(missing_information)),
+        "reasons": list(dict.fromkeys(reasons)),
+        "missing_information": list(dict.fromkeys(missing)),
         "official_url": scheme.get("official_url", ""),
     }
