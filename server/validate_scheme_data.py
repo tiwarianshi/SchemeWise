@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from eligibility import SUPPORTED_FIELDS, SUPPORTED_OPERATORS
 
 DATA_FILE = Path(__file__).parent / "data" / "schemes.json"
 
@@ -19,24 +20,24 @@ REQUIRED_FIELDS = {
     "eligibility_rules",
 }
 
-SUPPORTED_FIELDS = {
-    "age",
-    "state",
-    "annual_family_income",
-    "education_level",
-    "social_category",
-    "disability_status",
-    "occupation",
-}
+# SUPPORTED_FIELDS = {
+#     "age",
+#     "state",
+#     "annual_family_income",
+#     "education_level",
+#     "social_category",
+#     "disability_status",
+#     "occupation",
+# }
 
-SUPPORTED_OPERATORS = {
-    "eq",
-    "neq",
-    "gte",
-    "lte",
-    "in",
-    "not_in",
-}
+# SUPPORTED_OPERATORS = {
+#     "eq",
+#     "neq",
+#     "gte",
+#     "lte",
+#     "in",
+#     "not_in",
+# }
 
 
 def validate_expression(expression, path="rule"):

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { checkEligibility } from '../services/api'
 
-// Step 14: Reusable dropdown options
+// Reusable dropdown options
 
 const STATE_OPTIONS = [
   'Andhra Pradesh',
@@ -69,6 +69,60 @@ const OCCUPATION_OPTIONS = [
   'Other',
 ]
 
+// PM-KISAN questions.
+// "name" must exactly match the field name in server/eligibility.py.
+// Wording follows server/data/eligibility_verification.md.
+// "Not sure" is sent to the backend as null, never as false.
+
+const PMKISAN_QUESTIONS = [
+  {
+    name: 'has_eligible_landholding',
+    label: 'Does your family own cultivable land recorded in the State/UT land records?',
+    help: 'Ownership must have been held on or before 1 February 2019, or acquired by inheritance after the owner’s death.',
+  },
+  {
+    name: 'is_institutional_landholder',
+    label: 'Is the land held by an institution rather than by a family?',
+  },
+  {
+    name: 'has_constitutional_post_exclusion_in_family',
+    label: 'Is any family member a former or present holder of a constitutional post?',
+  },
+  {
+    name: 'has_elected_official_exclusion_in_family',
+    label: 'Is any family member a former or present minister, MP, MLA, MLC, mayor of a municipal corporation or chairperson of a district panchayat?',
+  },
+  {
+    name: 'has_excluded_government_employee_in_family',
+    label: 'Is any family member a serving or retired officer or employee of the Central or State government, a government public sector enterprise or autonomous body, or a regular local-body employee?',
+    help: 'Do not count Multi Tasking Staff, Class IV or Group D employees.',
+  },
+  {
+    name: 'has_excluded_pensioner_in_family',
+    label: 'Does any family member draw a pension of ₹10,000 or more per month?',
+    help: 'Do not count retired Multi Tasking Staff, Class IV or Group D employees.',
+  },
+  {
+    name: 'paid_income_tax_last_assessment_year_in_family',
+    label: 'Did any family member pay income tax in the last assessment year?',
+  },
+  {
+    name: 'has_practicing_registered_professional_in_family',
+    label: 'Is any family member a doctor, engineer, lawyer, chartered accountant or architect who is registered with a professional body and practising?',
+  },
+  {
+    name: 'is_nri_family',
+    label: 'Is your family Non-Resident Indian under the Income Tax Act?',
+    help: 'This applies to new applicants only.',
+  },
+]
+
+// Fields answered with Yes / No / Not sure.
+const BOOLEAN_FIELDS = new Set([
+  'disability_status',
+  ...PMKISAN_QUESTIONS.map((question) => question.name),
+])
+
 // Initial form values.
 // Empty strings mean the user has not supplied that information.
 
@@ -80,9 +134,12 @@ const initialForm = {
   social_category: '',
   disability_status: '',
   occupation: '',
+  ...Object.fromEntries(
+    PMKISAN_QUESTIONS.map((question) => [question.name, '']),
+  ),
 }
 
-// Step 16: Format the status badge.
+// Format the status badge.
 
 function formatStatus(status) {
   if (status === 'eligible') return 'Potentially eligible'
@@ -94,7 +151,7 @@ function formatStatus(status) {
   return 'Insufficient information'
 }
 
-// Step 16: Explain what each result means.
+// Explain what each result means.
 
 function getStatusExplanation(status) {
   switch (status) {
@@ -147,7 +204,7 @@ export default function EligibilityChecker() {
         key === 'annual_family_income'
       ) {
         profile[key] = Number(value)
-      } else if (key === 'disability_status') {
+      } else if (BOOLEAN_FIELDS.has(key)) {
         profile[key] = value === 'yes'
       } else {
         profile[key] = value
@@ -204,7 +261,7 @@ export default function EligibilityChecker() {
         onSubmit={handleSubmit}
       >
         <div className="eligibility-form-grid">
-          {/* Step 15: Age */}
+          {/* Age */}
 
           <label>
             Age
@@ -227,7 +284,7 @@ export default function EligibilityChecker() {
             </small>
           </label>
 
-          {/* Step 14: State */}
+          {/* State */}
 
           <label>
             State
@@ -249,7 +306,7 @@ export default function EligibilityChecker() {
             </select>
           </label>
 
-          {/* Step 15: Annual family income */}
+          {/* Annual family income */}
 
           <label>
             Annual family income (₹)
@@ -271,7 +328,7 @@ export default function EligibilityChecker() {
             </small>
           </label>
 
-          {/* Step 14: Education */}
+          {/* Education */}
 
           <label>
             Education level
@@ -293,7 +350,7 @@ export default function EligibilityChecker() {
             </select>
           </label>
 
-          {/* Step 14: Social category */}
+          {/* Social category */}
 
           <label>
             Social category
@@ -332,7 +389,7 @@ export default function EligibilityChecker() {
             </select>
           </label>
 
-          {/* Step 14: Occupation */}
+          {/* Occupation */}
 
           <label>
             Occupation
@@ -352,6 +409,47 @@ export default function EligibilityChecker() {
             </select>
           </label>
         </div>
+
+        {/* PM-KISAN questions */}
+
+        <fieldset className="eligibility-fieldset">
+          <legend>PM-KISAN questions (farmer families)</legend>
+
+          <p className="eligibility-fieldset-note">
+            In these questions, “family” means husband, wife and
+            minor children. Choose “Not sure” if you do not know —
+            it is not treated as “No”.
+          </p>
+
+          <div className="eligibility-form-grid">
+            {PMKISAN_QUESTIONS.map((question) => (
+              <label key={question.name}>
+                {question.label}
+
+                <select
+                  name={question.name}
+                  value={form[question.name]}
+                  onChange={handleChange}
+                  aria-describedby={
+                    question.help
+                      ? `${question.name}-help`
+                      : undefined
+                  }
+                >
+                  <option value="">Not sure</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                {question.help && (
+                  <small id={`${question.name}-help`}>
+                    {question.help}
+                  </small>
+                )}
+              </label>
+            ))}
+          </div>
+        </fieldset>
 
         {/* Form actions */}
 
@@ -453,13 +551,9 @@ export default function EligibilityChecker() {
                   </span>
                 </div>
 
-                {/* Step 16: Explanation below the status badge */}
-
                 <p className="eligibility-status-explanation">
                   {getStatusExplanation(result.status)}
                 </p>
-
-                {/* Assessment reasons */}
 
                 {result.reasons.length > 0 && (
                   <div>
@@ -476,8 +570,6 @@ export default function EligibilityChecker() {
                     </ul>
                   </div>
                 )}
-
-                {/* Missing information */}
 
                 {result.missing_information.length > 0 && (
                   <div>
@@ -496,8 +588,6 @@ export default function EligibilityChecker() {
                     </ul>
                   </div>
                 )}
-
-                {/* Official scheme link */}
 
                 {result.official_url && (
                   <a

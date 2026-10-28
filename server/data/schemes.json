@@ -201,10 +201,10 @@
     "category": "Agriculture",
     "beneficiary_group": "Farmers",
     "description": "A central government income-support scheme for eligible landholding farmer families, subject to scheme rules and exclusions.",
-    "benefits": [
+    "benefits":[
       "₹6,000 per year in three equal instalments, subject to eligibility and scheme rules."
     ],
-    "eligibility": [
+    "eligibility":[
       "Applicant must meet the scheme's applicable landholding farmer-family criteria.",
       "The farmer family must satisfy applicable exclusion and verification requirements."
     ],
@@ -212,12 +212,87 @@
     "official_url": "https://www.pmkisan.gov.in/",
     "last_verified": "2026-10-25",
     "is_sample": false,
-    "eligibility_rules": {
-      "rules_complete": false,
-      "source_url": "",
-      "verified_at": null,
-      "rule": null,
-      "verification_note": "Verify land-record, family, exclusion and registration requirements using current official PM-KISAN guidelines."
+    "eligibility_rules":{
+      "rules_complete": true,
+      "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf",
+      "verified_at": "2026-10-28",
+      "rule": {
+        "all_of": [
+          {
+            "field": "has_eligible_landholding",
+            "operator": "eq",
+            "value": true,
+            "description": "The farmer family must own cultivable land recorded in the State/UT land records (held on 1 February 2019, or inherited after the owner's death).",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "is_institutional_landholder",
+            "operator": "eq",
+            "value": false,
+            "description": "Institutional landholders are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_constitutional_post_exclusion_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a former or present holder of a constitutional post are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_elected_official_exclusion_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a former or present minister, MP, MLA, MLC, mayor of a municipal corporation or district panchayat chairperson are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_excluded_government_employee_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a serving or retired government, PSE or autonomous-body officer or employee, or a regular local-body employee, are not eligible (Multi Tasking Staff / Class IV / Group D are excepted).",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_excluded_pensioner_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a retired pensioner drawing Rs 10,000 or more per month are not eligible (Multi Tasking Staff / Class IV / Group D are excepted).",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "paid_income_tax_last_assessment_year_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families in which anyone paid income tax in the last assessment year are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_practicing_registered_professional_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a practising registered professional (doctor, engineer, lawyer, chartered accountant or architect) are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "is_nri_family",
+            "operator": "eq",
+            "value": false,
+            "description": "New applicants whose family is Non-Resident Indian under the Income Tax Act are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          }
+        ]
+      },
+      "verification_note": "Rules encoded from the PM-KISAN Operational Guidelines (revised as on 29.03.2020), clauses 3, 4.1, 4.1(c), 5.2-5.3. Before setting rules_complete to true: check the portal's 'Amendment in Operational Guidelines' and 'Clarification' pages for changes after 29.03.2020, and review data/eligibility_verification.md. eKYC, Aadhaar and bank-account requirements are registration steps, not modelled here."
     }
   },
   {

@@ -1,7 +1,7 @@
 from typing import Any, Literal
 import math
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, field_validator
 
 class EligibilityProfile(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -22,6 +22,17 @@ class EligibilityProfile(BaseModel):
     disability_status: bool | None = None
 
     occupation: str | None = None
+
+    # PM-KISAN facts (see data/eligibility_verification.md for exact question wording).
+    has_eligible_landholding: StrictBool | None = None
+    is_institutional_landholder: StrictBool | None = None
+    has_constitutional_post_exclusion_in_family: StrictBool | None = None
+    has_elected_official_exclusion_in_family: StrictBool | None = None
+    has_excluded_government_employee_in_family: StrictBool | None = None
+    has_excluded_pensioner_in_family: StrictBool | None = None
+    paid_income_tax_last_assessment_year_in_family: StrictBool | None = None
+    has_practicing_registered_professional_in_family: StrictBool | None = None
+    is_nri_family: StrictBool | None = None
 
     @field_validator("age", mode="before")
     @classmethod
@@ -70,6 +81,15 @@ SUPPORTED_FIELDS = {
     "social_category",
     "disability_status",
     "occupation",
+    "has_eligible_landholding",
+    "is_institutional_landholder",
+    "has_constitutional_post_exclusion_in_family",
+    "has_elected_official_exclusion_in_family",
+    "has_excluded_government_employee_in_family",
+    "has_excluded_pensioner_in_family",
+    "paid_income_tax_last_assessment_year_in_family",
+    "has_practicing_registered_professional_in_family",
+    "is_nri_family",
 }
 
 SUPPORTED_OPERATORS = {
