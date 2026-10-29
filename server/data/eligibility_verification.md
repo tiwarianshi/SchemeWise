@@ -39,3 +39,40 @@ Outstanding questions: see the unchecked items above.
 | is_nri_family | Is the family Non-Resident Indian under the Income Tax Act? (Applies to new applicants only — cl. 4.1(c).) | must be No |
 
 If the user does not know an answer, send null — never false.
+
+## Scheme ID: scheme-008 - NMMSS (fresh award, Class IX start)
+
+Source: NMMSS Revised Guidelines, dsel.education.gov.in (Ministry of Education). Publication date not shown on the PDF.
+The NSP FAQ PDFs only describe the application process; they contain no NMMSS rules.
+
+- [x] Income limit (cl. 1.1): Rs 3,50,000 per year, parental income from all sources, at time of selection
+- [x] School type (cl. 1.2, 2.2): Government / Government-aided / local body only; KV, JNV, residential and private schools excluded
+- [x] Marks (cl. 2.2, 3.2): 55% in Class VII to appear and in Class VIII at selection; 5% relaxation for SC/ST
+- [x] Selection test (cl. 2.1, 3.1): MAT + SAT, 40% aggregate (32% SC/ST) - modelled as "selected in the State/UT test"
+- [x] Promotion (cl. 6.1): clear promotion from Class VIII to IX to start
+- [x] Map every condition to a supported profile field
+- [ ] Confirm the scheme continues for 2026-27 (guidelines: "5 years beyond March 2021")
+- [ ] Confirm NSP 2026-27 rule: one merit-based scheme per year (guideline cl. 4.1 says one central scholarship only; the newer NSP notice may supersede it)
+- [ ] State/UT reservation and quota norms (cl. 1.1) - NOT modelled
+- [ ] Continuation rules (60% in Class X, first-attempt promotion in X and XII) - NOT modelled
+- [ ] Run validate_scheme_data.py and pytest; manual API check
+
+Assumption: the Class VII 55% condition to sit the test is enforced by the State when it selects students, so it is covered by "selected".
+Status: INCOMPLETE (rules_complete = false)
+
+### Exact question wording (frontend)
+| Profile field | Ask the user | Rule |
+|---|---|---|
+| selected_in_nmmss_state_test | Were you selected for the NMMSS scholarship through your State/UT Class VIII selection test? | must be Yes |
+| annual_family_income | Annual family income (parents, all sources) | at most 350000 |
+| school_type | What type of school are you studying in? | Government, Government-aided or Local body |
+| class_8_marks_percentage | What percentage did you score in the Class VIII examination? | at least 55 (50 if SC/ST) |
+| social_category | Social category | used for the SC/ST relaxation |
+| promoted_from_class_8_to_9 | Were you promoted from Class VIII to Class IX without being held back? | must be Yes |
+
+### scheme-008 review record
+Reviewer: Pragati
+Review date: 2026-10-29
+Status: rules_complete = true for a student starting the scholarship in Class IX.
+Resolved: scheme open for 2026-27 on NSP; one-scholarship clause not encoded (NSP 2026-27 notice).
+Still not modelled: State/UT reservation and quota; continuation rules.

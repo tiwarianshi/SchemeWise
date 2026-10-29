@@ -68,15 +68,20 @@ def test_unanswered_question_is_insufficient_information(complete, field):
     assert result["missing_information"]
 
 
-# def test_shipped_record_is_never_a_definitive_answer_until_marked_complete(shipped):
-#     # Holds while rules_complete is false; remove once you deliberately mark the scheme complete.
-#     if shipped["eligibility_rules"]["rules_complete"] is not True:
-#         assert run(shipped)["status"] == "insufficient_information"
+def test_shipped_record_is_marked_complete_and_gives_a_definitive_answer(shipped):
+    assert shipped["eligibility_rules"]["rules_complete"] is True
+    assert shipped["eligibility_rules"]["verified_at"]
+    assert run(shipped)["status"] == "eligible"
 
 
-# def test_profile_rejects_non_boolean_answers():
-#     with pytest.raises(Exception):
-#         EligibilityProfile(is_nri_family="no")
+def test_exclusion_stands_even_if_other_answers_are_missing(complete):
+    result = evaluate_scheme(
+        complete,
+        EligibilityProfile(is_institutional_landholder=True),
+    )
+    assert result["status"] == "not_eligible"
+
+
 def test_profile_rejects_non_boolean_answers():
     with pytest.raises(Exception):
         EligibilityProfile(is_nri_family="no")

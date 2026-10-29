@@ -176,22 +176,99 @@
     "category": "Education",
     "beneficiary_group": "Students",
     "description": "A scholarship scheme for eligible students subject to the applicable merit, income and school-level conditions.",
-    "benefits": [],
+    "benefits": [
+      "Rs 12,000 per year (Rs 1,000 per month) for up to four years, Class IX to XII, subject to scheme rules."
+    ],
     "eligibility": [
-      "Applicant must meet the applicable class and school requirements.",
-      "Applicant must satisfy the prescribed merit or examination criteria.",
-      "Applicant must meet the applicable family income and other conditions."
+      "Selected through the State/UT Class VIII selection test within the State/UT quota.",
+      "Parental income from all sources not more than Rs 3,50,000 per year.",
+      "Regular student in a Government, Government-aided or local body school (not Kendriya Vidyalaya, Jawahar Navodaya Vidyalaya, residential or private schools).",
+      "At least 55% marks in Class VIII (50% for SC/ST students) and clear promotion to Class IX."
     ],
     "required_documents": [],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
     "is_sample": false,
     "eligibility_rules": {
-      "rules_complete": false,
-      "source_url": "",
-      "verified_at": null,
-      "rule": null,
-      "verification_note": "Verify current class, examination, income and school eligibility requirements from official guidelines."
+      "rules_complete": true,
+      "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf",
+      "verified_at": "2026-10-29",
+      "rule": {
+        "all_of": [
+          {
+            "field": "selected_in_nmmss_state_test",
+            "operator": "eq",
+            "value": true,
+            "description": "The student must have been selected through the State/UT Class VIII selection test (MAT and SAT) within the State/UT quota.",
+            "verified": true,
+            "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+          },
+          {
+            "field": "annual_family_income",
+            "operator": "lte",
+            "value": 350000,
+            "description": "Parental income from all sources must not exceed Rs 3,50,000 per year at the time of selection.",
+            "verified": true,
+            "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+          },
+          {
+            "field": "school_type",
+            "operator": "in",
+            "value": [
+              "Government school",
+              "Government-aided school",
+              "Local body school"
+            ],
+            "description": "The student must study as a regular student in a Government, Government-aided or local body school. Kendriya Vidyalayas, Jawahar Navodaya Vidyalayas, residential schools with boarding and private schools are not eligible.",
+            "verified": true,
+            "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+          },
+          {
+            "any_of": [
+              {
+                "field": "class_8_marks_percentage",
+                "operator": "gte",
+                "value": 55,
+                "description": "The student must have scored at least 55% (or equivalent grade) in the Class VIII examination.",
+                "verified": true,
+                "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+              },
+              {
+                "all_of": [
+                  {
+                    "field": "social_category",
+                    "operator": "in",
+                    "value": [
+                      "SC",
+                      "ST"
+                    ],
+                    "description": "SC/ST students get a 5% relaxation on the Class VIII marks requirement.",
+                    "verified": true,
+                    "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+                  },
+                  {
+                    "field": "class_8_marks_percentage",
+                    "operator": "gte",
+                    "value": 50,
+                    "description": "SC/ST students must have scored at least 50% in the Class VIII examination.",
+                    "verified": true,
+                    "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "field": "promoted_from_class_8_to_9",
+            "operator": "eq",
+            "value": true,
+            "description": "The student must have been cleanly promoted from Class VIII to Class IX to start the scholarship.",
+            "verified": true,
+            "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+          }
+        ]
+      },
+      "verification_note": "Rules encoded from the NMMSS Revised Guidelines (dsel.education.gov.in), clauses 1.1, 1.2, 2.1, 2.2, 3.1, 3.2, 6.1, for a student STARTING the scholarship in Class IX. NSP shows the scheme open for 2026-27. Not modelled: State/UT reservation and quota norms, and continuation rules (60% in Class X, clear promotion in Classes X and XII). Guideline clause 4.1 (only one central scholarship) is not encoded because NSP's 2026-27 notice allows one merit-based scheme plus welfare-based schemes. Re-check the guidelines and the NSP scheme page every academic year."
     }
   },
   {
@@ -201,10 +278,10 @@
     "category": "Agriculture",
     "beneficiary_group": "Farmers",
     "description": "A central government income-support scheme for eligible landholding farmer families, subject to scheme rules and exclusions.",
-    "benefits":[
+    "benefits": [
       "₹6,000 per year in three equal instalments, subject to eligibility and scheme rules."
     ],
-    "eligibility":[
+    "eligibility": [
       "Applicant must meet the scheme's applicable landholding farmer-family criteria.",
       "The farmer family must satisfy applicable exclusion and verification requirements."
     ],
@@ -212,7 +289,7 @@
     "official_url": "https://www.pmkisan.gov.in/",
     "last_verified": "2026-10-25",
     "is_sample": false,
-    "eligibility_rules":{
+    "eligibility_rules": {
       "rules_complete": true,
       "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf",
       "verified_at": "2026-10-28",

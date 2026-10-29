@@ -117,10 +117,42 @@ const PMKISAN_QUESTIONS = [
   },
 ]
 
+// NMMSS questions (scholarship for Class IX students).
+// Wording follows server/data/eligibility_verification.md.
+
+const NMMSS_QUESTIONS = [
+  {
+    name: 'selected_in_nmmss_state_test',
+    label: 'Were you selected for the NMMSS scholarship through your State/UT Class VIII selection test?',
+  },
+  {
+    name: 'promoted_from_class_8_to_9',
+    label: 'Were you promoted from Class VIII to Class IX without being held back?',
+  },
+]
+
+const SCHOOL_TYPE_OPTIONS = [
+  'Government school',
+  'Government-aided school',
+  'Local body school',
+  'Kendriya Vidyalaya or Jawahar Navodaya Vidyalaya',
+  'Residential school run by Centre/State (with boarding and lodging)',
+  'Private school',
+  'Other',
+]
+
 // Fields answered with Yes / No / Not sure.
 const BOOLEAN_FIELDS = new Set([
   'disability_status',
   ...PMKISAN_QUESTIONS.map((question) => question.name),
+  ...NMMSS_QUESTIONS.map((question) => question.name),
+])
+
+// Fields sent as numbers.
+const NUMBER_FIELDS = new Set([
+  'age',
+  'annual_family_income',
+  'class_8_marks_percentage',
 ])
 
 // Initial form values.
@@ -134,8 +166,13 @@ const initialForm = {
   social_category: '',
   disability_status: '',
   occupation: '',
+  school_type: '',
+  class_8_marks_percentage: '',
   ...Object.fromEntries(
     PMKISAN_QUESTIONS.map((question) => [question.name, '']),
+  ),
+  ...Object.fromEntries(
+    NMMSS_QUESTIONS.map((question) => [question.name, '']),
   ),
 }
 
@@ -199,10 +236,7 @@ export default function EligibilityChecker() {
     for (const [key, value] of Object.entries(form)) {
       if (value === '') {
         profile[key] = null
-      } else if (
-        key === 'age' ||
-        key === 'annual_family_income'
-      ) {
+      } else if (NUMBER_FIELDS.has(key)) {
         profile[key] = Number(value)
       } else if (BOOLEAN_FIELDS.has(key)) {
         profile[key] = value === 'yes'
@@ -446,6 +480,75 @@ export default function EligibilityChecker() {
                     {question.help}
                   </small>
                 )}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {/* NMMSS questions */}
+
+        <fieldset className="eligibility-fieldset">
+          <legend>NMMSS scholarship questions (school students)</legend>
+
+          <p className="eligibility-fieldset-note">
+            Your family income and social category above are also
+            used for this scheme. Choose “Not sure” if you do not
+            know — it is not treated as “No”.
+          </p>
+
+          <div className="eligibility-form-grid">
+            <label>
+              What type of school are you studying in?
+
+              <select
+                name="school_type"
+                value={form.school_type}
+                onChange={handleChange}
+              >
+                <option value="">Select school type</option>
+
+                {SCHOOL_TYPE_OPTIONS.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label>
+              Percentage scored in the Class VIII examination
+
+              <input
+                type="number"
+                name="class_8_marks_percentage"
+                min="0"
+                max="100"
+                step="0.01"
+                value={form.class_8_marks_percentage}
+                onChange={handleChange}
+                placeholder="e.g. 62.5"
+                aria-describedby="class8-help"
+              />
+
+              <small id="class8-help">
+                Enter a number between 0 and 100, or leave blank if
+                unknown.
+              </small>
+            </label>
+
+            {NMMSS_QUESTIONS.map((question) => (
+              <label key={question.name}>
+                {question.label}
+
+                <select
+                  name={question.name}
+                  value={form[question.name]}
+                  onChange={handleChange}
+                >
+                  <option value="">Not sure</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
               </label>
             ))}
           </div>

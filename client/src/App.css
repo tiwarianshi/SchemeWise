@@ -419,3 +419,18 @@
   font-size: 0.9rem;
   line-height: 1.7;
 }
+.eligibility-fieldset {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--border, #292F42);
+  border-radius: 16px;
+}
+.eligibility-fieldset legend {
+  padding: 0 10px;
+  font-weight: 700;
+}
+.eligibility-fieldset-note {
+  margin: 0 0 16px;
+  color: var(--muted, #9298AA);
+  font-size: 0.9rem;
+}

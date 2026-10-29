@@ -34,6 +34,12 @@ class EligibilityProfile(BaseModel):
     has_practicing_registered_professional_in_family: StrictBool | None = None
     is_nri_family: StrictBool | None = None
 
+    # NMMSS facts (see data/eligibility_verification.md for exact question wording).
+    selected_in_nmmss_state_test: StrictBool | None = None
+    promoted_from_class_8_to_9: StrictBool | None = None
+    school_type: str | None = None
+    class_8_marks_percentage: float | None = Field(default=None, ge=0, le=100)
+
     @field_validator("age", mode="before")
     @classmethod
     def validate_age(cls, value):
@@ -44,6 +50,20 @@ class EligibilityProfile(BaseModel):
             raise ValueError("Age must be a whole number.")
 
         return value
+
+    @field_validator("class_8_marks_percentage", mode="before")
+    @classmethod
+    def validate_class_8_marks(cls, value):
+        if value is None:
+            return None
+
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError("Class 8 marks must be a number.")
+
+        if not math.isfinite(value):
+            raise ValueError("Class 8 marks must be finite.")
+
+        return float(value)
 
     @field_validator("annual_family_income", mode="before")
     @classmethod
@@ -90,6 +110,10 @@ SUPPORTED_FIELDS = {
     "paid_income_tax_last_assessment_year_in_family",
     "has_practicing_registered_professional_in_family",
     "is_nri_family",
+    "selected_in_nmmss_state_test",
+    "promoted_from_class_8_to_9",
+    "school_type",
+    "class_8_marks_percentage",
 }
 
 SUPPORTED_OPERATORS = {
@@ -451,12 +475,15 @@ def evaluate_scheme(
         reasons.extend(result["reasons"])
         missing.extend(result["missing"])
 
-    if not complete or missing or evaluation_value is None:
+    decided = complete and evaluation_value is not None
+
+    if not decided:
         status = "insufficient_information"
-    elif evaluation_value is True:
-        status = "eligible"
     else:
-        status = "not_eligible"
+        # A definite result comes only from verified conditions, so it stands
+        # even when unrelated questions (e.g. an unused alternative) are unanswered.
+        status = "eligible" if evaluation_value is True else "not_eligible"
+        missing = []
 
     return {
         "scheme_id": scheme.get("id"),
