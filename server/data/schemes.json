@@ -152,21 +152,125 @@
     "category": "Education",
     "beneficiary_group": "Students",
     "description": "A scholarship scheme for eligible students with disabilities pursuing covered higher education.",
-    "benefits": [],
-    "eligibility": [
-      "Applicant must satisfy the applicable disability-related criteria.",
-      "Applicant must meet the covered higher education, institution, income and other requirements."
+    "benefits": [
+      "Reimbursement of tuition and non-refundable fees, up to the cap in the current guidelines.",
+      "Maintenance allowance: Rs 3,000 per month for hostellers, Rs 1,500 per month for day scholars.",
+      "Special disability allowance: Rs 2,000 per month.",
+      "Books and stationery: Rs 5,000 per year.",
+      "One-time grants: Rs 45,000 for a computer or laptop and Rs 30,000 for aids and assistive devices."
     ],
-    "required_documents": [],
+    "eligibility": [
+      "Indian national with a benchmark disability (40% or more) and a valid disability certificate.",
+      "Parents'/guardians' income from all sources not more than Rs 8,00,000 per year.",
+      "Studying a regular, full-time graduate or post-graduate degree or diploma course at an institute notified by DEPwD.",
+      "Not previously awarded this scholarship, not repeating a class, and not more than two children with disabilities of the same parents benefiting (twins excepted).",
+      "Selection is competitive: 300 slots a year, 50% reserved for girls, based on marks in the qualifying examination."
+    ],
+    "required_documents": [
+      "Photograph",
+      "Proof of age",
+      "Disability certificate (UDID card where available)",
+      "Income certificate of parent or guardian",
+      "Tuition fee receipt",
+      "Last academic qualification certificate",
+      "Aadhaar number or enrolment ID"
+    ],
     "official_url": "https://scholarships.gov.in/All-Scholarships",
     "last_verified": "2026-10-25",
     "is_sample": false,
     "eligibility_rules": {
-      "rules_complete": false,
-      "source_url": "",
-      "verified_at": null,
-      "rule": null,
-      "verification_note": "Verify current eligible institutions, courses, income criteria and disability requirements before encoding structured rules."
+      "rules_complete": true,
+      "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf",
+      "verified_at": "2026-10-29",
+      "rule": {
+        "all_of": [
+          {
+            "field": "is_indian_national",
+            "operator": "eq",
+            "value": true,
+            "description": "The scholarship is open only to Indian nationals.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "disability_percentage",
+            "operator": "gte",
+            "value": 40,
+            "description": "The student must have a benchmark disability of 40% or more as defined in the Rights of Persons with Disabilities Act, 2016.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "has_valid_disability_certificate",
+            "operator": "eq",
+            "value": true,
+            "description": "The student must hold a valid disability certificate issued by the competent authority.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "annual_family_income",
+            "operator": "lte",
+            "value": 800000,
+            "description": "Parents'/guardians' income from all sources must not exceed Rs 8,00,000 per year.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "education_level",
+            "operator": "in",
+            "value": [
+              "Diploma",
+              "Undergraduate",
+              "Postgraduate"
+            ],
+            "description": "The student must be pursuing a graduate or post-graduate degree or diploma course.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "studying_in_notified_institute",
+            "operator": "eq",
+            "value": true,
+            "description": "The institute must be on the list of Institutes of Excellence notified by DEPwD for this scholarship.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "is_regular_full_time_course",
+            "operator": "eq",
+            "value": true,
+            "description": "Distance-learning, part-time and week-end courses are not covered.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "has_received_top_class_award_before",
+            "operator": "eq",
+            "value": false,
+            "description": "The award is one-time: a student who has already received it cannot be awarded again.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "exceeds_disabled_children_limit_per_parents",
+            "operator": "eq",
+            "value": false,
+            "description": "Not more than two children with disabilities of the same parents can receive benefits under the scheme (twins of the second child are also covered).",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "is_repeating_class",
+            "operator": "eq",
+            "value": false,
+            "description": "The scholarship is not available for a class the student is repeating.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          }
+        ]
+      },
+      "verification_note": "Rules encoded from the DEPwD scheme 'Scholarships for Students with Disabilities' (effective 1 April 2022, hosted on scholarships.gov.in), cl. 1.6, 2(i)-(iv), 3, 14.1, 14.6, and checked against the DEPwD revision of 4 September 2025 and the notified institutes list on the review date. Not encoded as a bar: holding another scholarship (cl. 2(v) lets the student choose one). Selection is competitive (300 slots, 50% for girls, merit) and is not modelled. Re-check every academic year."
     }
   },
   {

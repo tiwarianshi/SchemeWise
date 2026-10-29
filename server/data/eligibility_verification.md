@@ -76,3 +76,47 @@ Review date: 2026-10-29
 Status: rules_complete = true for a student starting the scholarship in Class IX.
 Resolved: scheme open for 2026-27 on NSP; one-scholarship clause not encoded (NSP 2026-27 notice).
 Still not modelled: State/UT reservation and quota; continuation rules.
+
+## Scheme ID: scheme-007 - Top Class Education Scholarship for Students with Disabilities
+
+Source: DEPwD "Scheme of Scholarship for Students with Disabilities" (effective 1 April 2022), hosted at
+scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf - cl. 1.6, 2, 3, 4, 14.
+Also read: the DEPwD "easy-read" Top Class page. It agrees on the main conditions but says tuition up to Rs 1.90 lakh while the PDF says Rs 2.00 lakh,
+so the amount was left out of the data. The uploaded National Policy for Persons with Disabilities (2006) contains no scholarship rules.
+
+- [x] Nationality (cl. 2(i)): Indian nationals only
+- [x] Disability (cl. 1.6, 2(ii)): benchmark disability 40% or more, valid certificate
+- [x] Income (cl. 3): parents/guardians income from all sources up to Rs 8,00,000 per year
+- [x] Course and institute (cl. 14.1, 14.6): graduate / post-graduate degree or diploma in DEPwD-notified institutes; no distance, part-time or week-end courses
+- [x] One-time award (cl. 14.6)
+- [x] Children limit (cl. 2(iii)): max two children with disabilities of the same parents; twin proviso
+- [x] Repeating a class (cl. 2(iv)): no scholarship for a repeated class
+- [x] Other scholarships (cl. 2(v)): student may choose one - NOT encoded as a bar
+- [x] Map every condition to a supported profile field
+- [ ] Check the DEPwD guidelines revision dated 4 September 2025
+- [ ] Check the notified institutes list is current (Annexure I of the 2022 PDF had 240 institutes)
+- [ ] Selection (300 slots, 50% girls, state-wise slots, merit) - NOT modelled
+- [ ] Run validate_scheme_data.py and pytest; manual API check
+
+Status: INCOMPLETE (rules_complete = false)
+
+### Exact question wording (frontend)
+| Profile field | Ask the user | Rule |
+|---|---|---|
+| is_indian_national | Are you an Indian national? | must be Yes |
+| disability_percentage | What is the disability percentage on your disability certificate or UDID card? | at least 40 |
+| has_valid_disability_certificate | Do you have a valid disability certificate issued by the competent authority? | must be Yes |
+| annual_family_income | Annual family income (parents/guardians, all sources) | at most 800000 |
+| education_level | Education level | Diploma, Undergraduate or Postgraduate |
+| studying_in_notified_institute | Is your institute on the list of Institutes of Excellence notified by DEPwD for this scholarship? | must be Yes |
+| is_regular_full_time_course | Is your course regular and full-time (not distance, part-time or week-end)? | must be Yes |
+| has_received_top_class_award_before | Have you already received the Top Class Education scholarship before? | must be No |
+| exceeds_disabled_children_limit_per_parents | Do two or more of your brothers or sisters with disabilities (same parents) already receive benefits under the Scholarships for Students with Disabilities scheme? If you are a twin of the second such child, answer No. | must be No |
+| is_repeating_class | Are you repeating a class or year that you have already studied? | must be No |
+
+### scheme-007 review record
+Reviewer: Pragati
+Review date: 2026-10-29
+Status: rules_complete = true.
+Checked: DEPwD revision of 4 September 2025; notified institutes list.
+Not modelled: selection (slots, girls' reservation, merit); holding another scholarship (student may choose).

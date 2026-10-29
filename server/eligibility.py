@@ -40,6 +40,16 @@ class EligibilityProfile(BaseModel):
     school_type: str | None = None
     class_8_marks_percentage: float | None = Field(default=None, ge=0, le=100)
 
+    # Scheme-007 facts (Top Class Education scholarship for students with disabilities).
+    disability_percentage: float | None = Field(default=None, ge=0, le=100)
+    is_indian_national: StrictBool | None = None
+    has_valid_disability_certificate: StrictBool | None = None
+    studying_in_notified_institute: StrictBool | None = None
+    is_regular_full_time_course: StrictBool | None = None
+    has_received_top_class_award_before: StrictBool | None = None
+    exceeds_disabled_children_limit_per_parents: StrictBool | None = None
+    is_repeating_class: StrictBool | None = None
+
     @field_validator("age", mode="before")
     @classmethod
     def validate_age(cls, value):
@@ -50,6 +60,20 @@ class EligibilityProfile(BaseModel):
             raise ValueError("Age must be a whole number.")
 
         return value
+
+    @field_validator("disability_percentage", mode="before")
+    @classmethod
+    def validate_disability_percentage(cls, value):
+        if value is None:
+            return None
+
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise ValueError("Disability percentage must be a number.")
+
+        if not math.isfinite(value):
+            raise ValueError("Disability percentage must be finite.")
+
+        return float(value)
 
     @field_validator("class_8_marks_percentage", mode="before")
     @classmethod
@@ -114,6 +138,14 @@ SUPPORTED_FIELDS = {
     "promoted_from_class_8_to_9",
     "school_type",
     "class_8_marks_percentage",
+    "disability_percentage",
+    "is_indian_national",
+    "has_valid_disability_certificate",
+    "studying_in_notified_institute",
+    "is_regular_full_time_course",
+    "has_received_top_class_award_before",
+    "exceeds_disabled_children_limit_per_parents",
+    "is_repeating_class",
 }
 
 SUPPORTED_OPERATORS = {

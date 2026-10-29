@@ -141,11 +141,48 @@ const SCHOOL_TYPE_OPTIONS = [
   'Other',
 ]
 
+// Scheme-007: Top Class Education scholarship for students with disabilities.
+// Wording follows server/data/eligibility_verification.md.
+
+const DISABILITY_SCHOLARSHIP_QUESTIONS = [
+  {
+    name: 'is_indian_national',
+    label: 'Are you an Indian national?',
+  },
+  {
+    name: 'has_valid_disability_certificate',
+    label: 'Do you have a valid disability certificate issued by the competent authority?',
+  },
+  {
+    name: 'studying_in_notified_institute',
+    label: 'Is your institute on the list of Institutes of Excellence notified by DEPwD for the Top Class Education scholarship?',
+    help: 'Check the list on the National Scholarship Portal or the DEPwD website.',
+  },
+  {
+    name: 'is_regular_full_time_course',
+    label: 'Is your course regular and full-time (not distance, part-time or week-end)?',
+  },
+  {
+    name: 'has_received_top_class_award_before',
+    label: 'Have you already received the Top Class Education scholarship before?',
+  },
+  {
+    name: 'exceeds_disabled_children_limit_per_parents',
+    label: 'Do two or more of your brothers or sisters with disabilities (same parents) already receive benefits under the Scholarships for Students with Disabilities scheme?',
+    help: 'If you are a twin of the second such child, answer No.',
+  },
+  {
+    name: 'is_repeating_class',
+    label: 'Are you repeating a class or year that you have already studied?',
+  },
+]
+
 // Fields answered with Yes / No / Not sure.
 const BOOLEAN_FIELDS = new Set([
   'disability_status',
   ...PMKISAN_QUESTIONS.map((question) => question.name),
   ...NMMSS_QUESTIONS.map((question) => question.name),
+  ...DISABILITY_SCHOLARSHIP_QUESTIONS.map((question) => question.name),
 ])
 
 // Fields sent as numbers.
@@ -153,6 +190,7 @@ const NUMBER_FIELDS = new Set([
   'age',
   'annual_family_income',
   'class_8_marks_percentage',
+  'disability_percentage',
 ])
 
 // Initial form values.
@@ -168,11 +206,15 @@ const initialForm = {
   occupation: '',
   school_type: '',
   class_8_marks_percentage: '',
+  disability_percentage: '',
   ...Object.fromEntries(
     PMKISAN_QUESTIONS.map((question) => [question.name, '']),
   ),
   ...Object.fromEntries(
     NMMSS_QUESTIONS.map((question) => [question.name, '']),
+  ),
+  ...Object.fromEntries(
+    DISABILITY_SCHOLARSHIP_QUESTIONS.map((question) => [question.name, '']),
   ),
 }
 
@@ -549,6 +591,70 @@ export default function EligibilityChecker() {
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
                 </select>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        {/* Disability scholarship (Top Class Education) questions */}
+
+        <fieldset className="eligibility-fieldset">
+          <legend>
+            Disability scholarship questions (Top Class Education)
+          </legend>
+
+          <p className="eligibility-fieldset-note">
+            Your education level and annual family income above are
+            also used for this scheme. Choose “Not sure” if you do
+            not know — it is not treated as “No”.
+          </p>
+
+          <div className="eligibility-form-grid">
+            <label>
+              Disability percentage on your certificate or UDID card
+
+              <input
+                type="number"
+                name="disability_percentage"
+                min="0"
+                max="100"
+                step="0.01"
+                value={form.disability_percentage}
+                onChange={handleChange}
+                placeholder="e.g. 45"
+                aria-describedby="disability-pct-help"
+              />
+
+              <small id="disability-pct-help">
+                Enter a number between 0 and 100, or leave blank if
+                unknown.
+              </small>
+            </label>
+
+            {DISABILITY_SCHOLARSHIP_QUESTIONS.map((question) => (
+              <label key={question.name}>
+                {question.label}
+
+                <select
+                  name={question.name}
+                  value={form[question.name]}
+                  onChange={handleChange}
+                  aria-describedby={
+                    question.help
+                      ? `${question.name}-help`
+                      : undefined
+                  }
+                >
+                  <option value="">Not sure</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                {question.help && (
+                  <small id={`${question.name}-help`}>
+                    {question.help}
+                  </small>
+                )}
               </label>
             ))}
           </div>
