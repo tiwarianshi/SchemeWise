@@ -1,4 +1,12 @@
-
 fastapi
 uvicorn
-pytest httpx
+pytest
+httpx2
+pymupdf
+tiktoken
+google-genai
+python-dotenv
+chromadb
+python-multipart
+
+

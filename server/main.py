@@ -2,14 +2,22 @@ import json
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query
+
 from fastapi.middleware.cors import CORSMiddleware
+
+from routers.chat import router as chat_router
 
 from eligibility import (
     EligibilityCheckRequest,
     evaluate_scheme,
 )
+from routers.documents import router as documents_router
 
 app = FastAPI(title="SchemeWise API")
+
+app.include_router(documents_router)
+
+app.include_router(chat_router)
 
 # CORS configuration: allow requests from the local React frontend.
 app.add_middleware(
@@ -19,7 +27,7 @@ app.add_middleware(
         "http://127.0.0.1:5173",
     ],
     allow_credentials=False,
-    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
