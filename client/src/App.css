@@ -905,3 +905,8 @@
     padding: 16px;
   }
 }
+/* Add this to the END of client/src/App.css */
+.eligibility-scheme-picker {
+  margin-bottom: 24px;
+  max-width: 560px;
+}

@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { checkEligibility } from '../services/api'
 
-// Reusable dropdown options
+// ---------------------------------------------------------------------
+// Dropdown options (keep in sync with the lists in server/eligibility.py)
+// ---------------------------------------------------------------------
 
 const STATE_OPTIONS = [
   'Andhra Pradesh',
@@ -69,10 +71,22 @@ const OCCUPATION_OPTIONS = [
   'Other',
 ]
 
-// PM-KISAN questions.
+const SCHOOL_TYPE_OPTIONS = [
+  'Government school',
+  'Government-aided school',
+  'Local body school',
+  'Kendriya Vidyalaya or Jawahar Navodaya Vidyalaya',
+  'Residential school run by Centre/State (with boarding and lodging)',
+  'Private school',
+  'Other',
+]
+
+// ---------------------------------------------------------------------
+// Scheme-specific Yes / No questions.
 // "name" must exactly match the field name in server/eligibility.py.
 // Wording follows server/data/eligibility_verification.md.
 // "Not sure" is sent to the backend as null, never as false.
+// ---------------------------------------------------------------------
 
 const PMKISAN_QUESTIONS = [
   {
@@ -117,9 +131,6 @@ const PMKISAN_QUESTIONS = [
   },
 ]
 
-// NMMSS questions (scholarship for Class IX students).
-// Wording follows server/data/eligibility_verification.md.
-
 const NMMSS_QUESTIONS = [
   {
     name: 'selected_in_nmmss_state_test',
@@ -130,19 +141,6 @@ const NMMSS_QUESTIONS = [
     label: 'Were you promoted from Class VIII to Class IX without being held back?',
   },
 ]
-
-const SCHOOL_TYPE_OPTIONS = [
-  'Government school',
-  'Government-aided school',
-  'Local body school',
-  'Kendriya Vidyalaya or Jawahar Navodaya Vidyalaya',
-  'Residential school run by Centre/State (with boarding and lodging)',
-  'Private school',
-  'Other',
-]
-
-// Scheme-007: Top Class Education scholarship for students with disabilities.
-// Wording follows server/data/eligibility_verification.md.
 
 const DISABILITY_SCHOLARSHIP_QUESTIONS = [
   {
@@ -177,48 +175,80 @@ const DISABILITY_SCHOLARSHIP_QUESTIONS = [
   },
 ]
 
+// ---------------------------------------------------------------------
+// Which fields belong to which scheme
+// ---------------------------------------------------------------------
+
+// Always shown, and always sent, whichever scheme is selected.
+const COMMON_FIELDS = [
+  'age',
+  'state',
+  'annual_family_income',
+  'education_level',
+  'social_category',
+  'disability_status',
+  'occupation',
+]
+
+const names = (questions) => questions.map((question) => question.name)
+
+// To add a scheme: add an entry here, a questions panel below, and one line in the form.
+const SCHEMES = [
+  {
+    key: 'pmkisan',
+    label: 'PM-KISAN',
+    schemeId: 'scheme-009',
+    hint: 'Income support for landholding farmer families.',
+    fields: names(PMKISAN_QUESTIONS),
+  },
+  {
+    key: 'nmmss',
+    label: 'NMMSS Scholarship',
+    schemeId: 'scheme-008',
+    hint: 'For students selected through the State Class VIII test and starting Class IX.',
+    fields: [
+      'school_type',
+      'class_7_marks_percentage',
+      'class_8_marks_percentage',
+      ...names(NMMSS_QUESTIONS),
+    ],
+  },
+  {
+    key: 'top-class',
+    label: 'Top Class Education Scholarship',
+    schemeId: 'scheme-007',
+    hint: 'For students with disabilities in graduate, post-graduate or diploma courses at notified institutes.',
+    fields: ['disability_percentage', ...names(DISABILITY_SCHOLARSHIP_QUESTIONS)],
+  },
+]
+
 // Fields answered with Yes / No / Not sure.
 const BOOLEAN_FIELDS = new Set([
   'disability_status',
-  ...PMKISAN_QUESTIONS.map((question) => question.name),
-  ...NMMSS_QUESTIONS.map((question) => question.name),
-  ...DISABILITY_SCHOLARSHIP_QUESTIONS.map((question) => question.name),
+  ...names(PMKISAN_QUESTIONS),
+  ...names(NMMSS_QUESTIONS),
+  ...names(DISABILITY_SCHOLARSHIP_QUESTIONS),
 ])
 
 // Fields sent as numbers.
 const NUMBER_FIELDS = new Set([
   'age',
   'annual_family_income',
+  'class_7_marks_percentage',
   'class_8_marks_percentage',
   'disability_percentage',
 ])
 
-// Initial form values.
 // Empty strings mean the user has not supplied that information.
+const initialForm = Object.fromEntries(
+  [...COMMON_FIELDS, ...SCHEMES.flatMap((scheme) => scheme.fields)].map(
+    (field) => [field, ''],
+  ),
+)
 
-const initialForm = {
-  age: '',
-  state: '',
-  annual_family_income: '',
-  education_level: '',
-  social_category: '',
-  disability_status: '',
-  occupation: '',
-  school_type: '',
-  class_8_marks_percentage: '',
-  disability_percentage: '',
-  ...Object.fromEntries(
-    PMKISAN_QUESTIONS.map((question) => [question.name, '']),
-  ),
-  ...Object.fromEntries(
-    NMMSS_QUESTIONS.map((question) => [question.name, '']),
-  ),
-  ...Object.fromEntries(
-    DISABILITY_SCHOLARSHIP_QUESTIONS.map((question) => [question.name, '']),
-  ),
-}
-
-// Format the status badge.
+// ---------------------------------------------------------------------
+// Result text
+// ---------------------------------------------------------------------
 
 function formatStatus(status) {
   if (status === 'eligible') return 'Potentially eligible'
@@ -229,8 +259,6 @@ function formatStatus(status) {
 
   return 'Insufficient information'
 }
-
-// Explain what each result means.
 
 function getStatusExplanation(status) {
   switch (status) {
@@ -245,12 +273,201 @@ function getStatusExplanation(status) {
   }
 }
 
+// ---------------------------------------------------------------------
+// Small building blocks
+// ---------------------------------------------------------------------
+
+function YesNoQuestion({ question, value, onChange }) {
+  const helpId = question.help ? `${question.name}-help` : undefined
+
+  return (
+    <label>
+      {question.label}
+
+      <select
+        name={question.name}
+        value={value}
+        onChange={onChange}
+        aria-describedby={helpId}
+      >
+        <option value="">Not sure</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      {question.help && <small id={helpId}>{question.help}</small>}
+    </label>
+  )
+}
+
+function PmKisanQuestions({ form, onChange }) {
+  return (
+    <fieldset className="eligibility-fieldset">
+      <legend>PM-KISAN questions (farmer families)</legend>
+
+      <p className="eligibility-fieldset-note">
+        In these questions, “family” means husband, wife and minor
+        children. Choose “Not sure” if you do not know — it is not
+        treated as “No”.
+      </p>
+
+      <div className="eligibility-form-grid">
+        {PMKISAN_QUESTIONS.map((question) => (
+          <YesNoQuestion
+            key={question.name}
+            question={question}
+            value={form[question.name]}
+            onChange={onChange}
+          />
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
+function NmmssQuestions({ form, onChange }) {
+  return (
+    <fieldset className="eligibility-fieldset">
+      <legend>NMMSS scholarship questions (school students)</legend>
+
+      <p className="eligibility-fieldset-note">
+        Your annual family income and social category above are also
+        used for this scheme. Choose “Not sure” if you do not know —
+        it is not treated as “No”.
+      </p>
+
+      <div className="eligibility-form-grid">
+        <label>
+          What type of school are you studying in?
+
+          <select
+            name="school_type"
+            value={form.school_type}
+            onChange={onChange}
+          >
+            <option value="">Select school type</option>
+
+            {SCHOOL_TYPE_OPTIONS.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Percentage scored in the Class VII examination
+
+          <input
+            type="number"
+            name="class_7_marks_percentage"
+            min="0"
+            max="100"
+            step="0.01"
+            value={form.class_7_marks_percentage}
+            onChange={onChange}
+            placeholder="e.g. 58"
+            aria-describedby="class7-help"
+          />
+
+          <small id="class7-help">
+            Needed to confirm you could sit the selection test (55%,
+            or 50% for SC/ST students). Leave blank if unknown.
+          </small>
+        </label>
+
+        <label>
+          Percentage scored in the Class VIII examination
+
+          <input
+            type="number"
+            name="class_8_marks_percentage"
+            min="0"
+            max="100"
+            step="0.01"
+            value={form.class_8_marks_percentage}
+            onChange={onChange}
+            placeholder="e.g. 62.5"
+            aria-describedby="class8-help"
+          />
+
+          <small id="class8-help">
+            Enter a number between 0 and 100, or leave blank if
+            unknown.
+          </small>
+        </label>
+
+        {NMMSS_QUESTIONS.map((question) => (
+          <YesNoQuestion
+            key={question.name}
+            question={question}
+            value={form[question.name]}
+            onChange={onChange}
+          />
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
+function TopClassQuestions({ form, onChange }) {
+  return (
+    <fieldset className="eligibility-fieldset">
+      <legend>Top Class Education scholarship questions</legend>
+
+      <p className="eligibility-fieldset-note">
+        Your education level and annual family income above are also
+        used for this scheme. Choose “Not sure” if you do not know —
+        it is not treated as “No”.
+      </p>
+
+      <div className="eligibility-form-grid">
+        <label>
+          Disability percentage on your certificate or UDID card
+
+          <input
+            type="number"
+            name="disability_percentage"
+            min="0"
+            max="100"
+            step="0.01"
+            value={form.disability_percentage}
+            onChange={onChange}
+            placeholder="e.g. 45"
+            aria-describedby="disability-pct-help"
+          />
+
+          <small id="disability-pct-help">
+            Enter a number between 0 and 100, or leave blank if
+            unknown.
+          </small>
+        </label>
+
+        {DISABILITY_SCHOLARSHIP_QUESTIONS.map((question) => (
+          <YesNoQuestion
+            key={question.name}
+            question={question}
+            value={form[question.name]}
+            onChange={onChange}
+          />
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
+// ---------------------------------------------------------------------
+// The page section
+// ---------------------------------------------------------------------
+
 export default function EligibilityChecker() {
+  const [schemeKey, setSchemeKey] = useState('')
   const [form, setForm] = useState(initialForm)
   const [results, setResults] = useState([])
-  const [summary, setSummary] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const selected = SCHEMES.find((scheme) => scheme.key === schemeKey)
 
   // Update the corresponding form field whenever the user changes it.
 
@@ -263,19 +480,33 @@ export default function EligibilityChecker() {
     }))
   }
 
+  // Choosing another scheme clears the previous result and error.
+  // Answers stay in the form but are only sent for the selected scheme.
+
+  function handleSchemeChange(event) {
+    setSchemeKey(event.target.value)
+    setResults([])
+    setError('')
+  }
+
   // Convert form values to the data types expected by the backend.
+  // Only the common fields and the selected scheme's fields are sent.
 
   async function handleSubmit(event) {
     event.preventDefault()
 
+    if (!selected) return
+
     setLoading(true)
     setError('')
     setResults([])
-    setSummary(null)
 
+    const sendFields = new Set([...COMMON_FIELDS, ...selected.fields])
     const profile = {}
 
     for (const [key, value] of Object.entries(form)) {
+      if (!sendFields.has(key)) continue
+
       if (value === '') {
         profile[key] = null
       } else if (NUMBER_FIELDS.has(key)) {
@@ -290,8 +521,17 @@ export default function EligibilityChecker() {
     try {
       const data = await checkEligibility(profile)
 
-      setResults(data.results ?? [])
-      setSummary(data.summary ?? null)
+      const chosen = (data.results ?? []).filter(
+        (result) => result.scheme_id === selected.schemeId,
+      )
+
+      if (chosen.length === 0) {
+        throw new Error(
+          `The server returned no result for ${selected.label}. Please try again.`,
+        )
+      }
+
+      setResults(chosen)
     } catch (err) {
       setError(
         err.message ||
@@ -302,12 +542,11 @@ export default function EligibilityChecker() {
     }
   }
 
-  // Reset the form and clear previously displayed results.
+  // Clear all answers and any displayed result. The chosen scheme stays selected.
 
   function handleReset() {
     setForm(initialForm)
     setResults([])
-    setSummary(null)
     setError('')
   }
 
@@ -321,12 +560,13 @@ export default function EligibilityChecker() {
         </span>
 
         <h2>
-          Find schemes that match <span>your profile.</span>
+          Check your eligibility <span>scheme by scheme.</span>
         </h2>
 
         <p>
-          Enter your details to compare your profile with the
-          eligibility conditions currently recorded in SchemeWise.
+          Choose a scheme and answer only the questions it needs. We
+          compare your answers with the eligibility conditions
+          currently recorded in SchemeWise.
         </p>
       </div>
 
@@ -336,337 +576,214 @@ export default function EligibilityChecker() {
         className="eligibility-form"
         onSubmit={handleSubmit}
       >
-        <div className="eligibility-form-grid">
-          {/* Age */}
+        {/* Step 1: choose the scheme */}
 
+        <div className="eligibility-scheme-picker">
           <label>
-            Age
+            Select scheme
 
-            <input
-              type="number"
-              name="age"
-              min="0"
-              max="120"
-              step="1"
-              value={form.age}
-              onChange={handleChange}
-              placeholder="Enter your age"
-              aria-describedby="age-help"
-            />
+            <select
+              name="scheme"
+              value={schemeKey}
+              onChange={handleSchemeChange}
+              aria-describedby="scheme-picker-help"
+            >
+              <option value="">Choose a scheme to check</option>
 
-            <small id="age-help">
-              Enter a whole number between 0 and 120, or leave
-              blank if unknown.
+              {SCHEMES.map((scheme) => (
+                <option key={scheme.key} value={scheme.key}>
+                  {scheme.label}
+                </option>
+              ))}
+            </select>
+
+            <small id="scheme-picker-help">
+              {selected
+                ? selected.hint
+                : 'We will then ask only the questions that scheme needs.'}
             </small>
-          </label>
-
-          {/* State */}
-
-          <label>
-            State
-
-            <select
-              name="state"
-              value={form.state}
-              onChange={handleChange}
-            >
-              <option value="">
-                Select state or union territory
-              </option>
-
-              {STATE_OPTIONS.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          {/* Annual family income */}
-
-          <label>
-            Annual family income (₹)
-
-            <input
-              type="number"
-              name="annual_family_income"
-              min="0"
-              step="1"
-              value={form.annual_family_income}
-              onChange={handleChange}
-              placeholder="e.g. 150000"
-              aria-describedby="income-help"
-            />
-
-            <small id="income-help">
-              Enter the annual amount in Indian rupees. Leave
-              blank if unknown.
-            </small>
-          </label>
-
-          {/* Education */}
-
-          <label>
-            Education level
-
-            <select
-              name="education_level"
-              value={form.education_level}
-              onChange={handleChange}
-            >
-              <option value="">
-                Select education level
-              </option>
-
-              {EDUCATION_OPTIONS.map((education) => (
-                <option key={education} value={education}>
-                  {education}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          {/* Social category */}
-
-          <label>
-            Social category
-
-            <select
-              name="social_category"
-              value={form.social_category}
-              onChange={handleChange}
-            >
-              <option value="">Select category</option>
-
-              {CATEGORY_OPTIONS.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          {/* Disability status */}
-
-          <label>
-            Disability status
-
-            <select
-              name="disability_status"
-              value={form.disability_status}
-              onChange={handleChange}
-            >
-              <option value="">
-                Prefer not to specify
-              </option>
-
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-          </label>
-
-          {/* Occupation */}
-
-          <label>
-            Occupation
-
-            <select
-              name="occupation"
-              value={form.occupation}
-              onChange={handleChange}
-            >
-              <option value="">Select occupation</option>
-
-              {OCCUPATION_OPTIONS.map((occupation) => (
-                <option key={occupation} value={occupation}>
-                  {occupation}
-                </option>
-              ))}
-            </select>
           </label>
         </div>
 
-        {/* PM-KISAN questions */}
+        {/* Step 2: common details (always visible) */}
 
         <fieldset className="eligibility-fieldset">
-          <legend>PM-KISAN questions (farmer families)</legend>
-
-          <p className="eligibility-fieldset-note">
-            In these questions, “family” means husband, wife and
-            minor children. Choose “Not sure” if you do not know —
-            it is not treated as “No”.
-          </p>
+          <legend>Your details (used for every scheme)</legend>
 
           <div className="eligibility-form-grid">
-            {PMKISAN_QUESTIONS.map((question) => (
-              <label key={question.name}>
-                {question.label}
+            {/* Age */}
 
-                <select
-                  name={question.name}
-                  value={form[question.name]}
-                  onChange={handleChange}
-                  aria-describedby={
-                    question.help
-                      ? `${question.name}-help`
-                      : undefined
-                  }
-                >
-                  <option value="">Not sure</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-
-                {question.help && (
-                  <small id={`${question.name}-help`}>
-                    {question.help}
-                  </small>
-                )}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        {/* NMMSS questions */}
-
-        <fieldset className="eligibility-fieldset">
-          <legend>NMMSS scholarship questions (school students)</legend>
-
-          <p className="eligibility-fieldset-note">
-            Your family income and social category above are also
-            used for this scheme. Choose “Not sure” if you do not
-            know — it is not treated as “No”.
-          </p>
-
-          <div className="eligibility-form-grid">
             <label>
-              What type of school are you studying in?
+              Age
+
+              <input
+                type="number"
+                name="age"
+                min="0"
+                max="120"
+                step="1"
+                value={form.age}
+                onChange={handleChange}
+                placeholder="Enter your age"
+                aria-describedby="age-help"
+              />
+
+              <small id="age-help">
+                Enter a whole number between 0 and 120, or leave
+                blank if unknown.
+              </small>
+            </label>
+
+            {/* State */}
+
+            <label>
+              State
 
               <select
-                name="school_type"
-                value={form.school_type}
+                name="state"
+                value={form.state}
                 onChange={handleChange}
               >
-                <option value="">Select school type</option>
+                <option value="">
+                  Select state or union territory
+                </option>
 
-                {SCHOOL_TYPE_OPTIONS.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
+                {STATE_OPTIONS.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
                   </option>
                 ))}
               </select>
             </label>
 
+            {/* Annual family income */}
+
             <label>
-              Percentage scored in the Class VIII examination
+              Annual family income (₹)
 
               <input
                 type="number"
-                name="class_8_marks_percentage"
+                name="annual_family_income"
                 min="0"
-                max="100"
-                step="0.01"
-                value={form.class_8_marks_percentage}
+                step="1"
+                value={form.annual_family_income}
                 onChange={handleChange}
-                placeholder="e.g. 62.5"
-                aria-describedby="class8-help"
+                placeholder="e.g. 150000"
+                aria-describedby="income-help"
               />
 
-              <small id="class8-help">
-                Enter a number between 0 and 100, or leave blank if
-                unknown.
+              <small id="income-help">
+                Enter the annual amount in Indian rupees. Leave
+                blank if unknown.
               </small>
             </label>
 
-            {NMMSS_QUESTIONS.map((question) => (
-              <label key={question.name}>
-                {question.label}
+            {/* Education */}
 
-                <select
-                  name={question.name}
-                  value={form[question.name]}
-                  onChange={handleChange}
-                >
-                  <option value="">Not sure</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        {/* Disability scholarship (Top Class Education) questions */}
-
-        <fieldset className="eligibility-fieldset">
-          <legend>
-            Disability scholarship questions (Top Class Education)
-          </legend>
-
-          <p className="eligibility-fieldset-note">
-            Your education level and annual family income above are
-            also used for this scheme. Choose “Not sure” if you do
-            not know — it is not treated as “No”.
-          </p>
-
-          <div className="eligibility-form-grid">
             <label>
-              Disability percentage on your certificate or UDID card
+              Education level
 
-              <input
-                type="number"
-                name="disability_percentage"
-                min="0"
-                max="100"
-                step="0.01"
-                value={form.disability_percentage}
+              <select
+                name="education_level"
+                value={form.education_level}
                 onChange={handleChange}
-                placeholder="e.g. 45"
-                aria-describedby="disability-pct-help"
-              />
+              >
+                <option value="">
+                  Select education level
+                </option>
 
-              <small id="disability-pct-help">
-                Enter a number between 0 and 100, or leave blank if
-                unknown.
-              </small>
+                {EDUCATION_OPTIONS.map((education) => (
+                  <option key={education} value={education}>
+                    {education}
+                  </option>
+                ))}
+              </select>
             </label>
 
-            {DISABILITY_SCHOLARSHIP_QUESTIONS.map((question) => (
-              <label key={question.name}>
-                {question.label}
+            {/* Social category */}
 
-                <select
-                  name={question.name}
-                  value={form[question.name]}
-                  onChange={handleChange}
-                  aria-describedby={
-                    question.help
-                      ? `${question.name}-help`
-                      : undefined
-                  }
-                >
-                  <option value="">Not sure</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
+            <label>
+              Social category
 
-                {question.help && (
-                  <small id={`${question.name}-help`}>
-                    {question.help}
-                  </small>
-                )}
-              </label>
-            ))}
+              <select
+                name="social_category"
+                value={form.social_category}
+                onChange={handleChange}
+              >
+                <option value="">Select category</option>
+
+                {CATEGORY_OPTIONS.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            {/* Disability status */}
+
+            <label>
+              Disability status
+
+              <select
+                name="disability_status"
+                value={form.disability_status}
+                onChange={handleChange}
+              >
+                <option value="">
+                  Prefer not to specify
+                </option>
+
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </label>
+
+            {/* Occupation */}
+
+            <label>
+              Occupation
+
+              <select
+                name="occupation"
+                value={form.occupation}
+                onChange={handleChange}
+              >
+                <option value="">Select occupation</option>
+
+                {OCCUPATION_OPTIONS.map((occupation) => (
+                  <option key={occupation} value={occupation}>
+                    {occupation}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
         </fieldset>
+
+        {/* Step 3: only the selected scheme's questions */}
+
+        {selected?.key === 'pmkisan' && (
+          <PmKisanQuestions form={form} onChange={handleChange} />
+        )}
+
+        {selected?.key === 'nmmss' && (
+          <NmmssQuestions form={form} onChange={handleChange} />
+        )}
+
+        {selected?.key === 'top-class' && (
+          <TopClassQuestions form={form} onChange={handleChange} />
+        )}
 
         {/* Form actions */}
 
         <div className="eligibility-actions">
-          <button type="submit" disabled={loading}>
+          <button type="submit" disabled={loading || !selected}>
             {loading
-              ? 'Checking schemes...'
-              : 'Check Eligibility'}
+              ? 'Checking...'
+              : selected
+                ? `Check ${selected.label}`
+                : 'Check Eligibility'}
           </button>
 
           <button
@@ -679,9 +796,16 @@ export default function EligibilityChecker() {
           </button>
         </div>
 
+        {!selected && (
+          <p className="eligibility-fieldset-note">
+            Select a scheme above to enable the check.
+          </p>
+        )}
+
         <p className="eligibility-privacy-note">
           Enter only the information needed for this check. Your
-          profile is sent to the SchemeWise backend for evaluation.
+          answers for the selected scheme are sent to the SchemeWise
+          backend for evaluation.
         </p>
       </form>
 
@@ -701,9 +825,9 @@ export default function EligibilityChecker() {
         </div>
       )}
 
-      {/* Eligibility results */}
+      {/* Eligibility result */}
 
-      {summary && (
+      {results.length > 0 && (
         <section
           className="eligibility-results"
           aria-live="polite"
@@ -711,38 +835,12 @@ export default function EligibilityChecker() {
           <div className="eligibility-results-heading">
             <div>
               <span className="eligibility-eyebrow">
-                YOUR RESULTS
+                YOUR RESULT
               </span>
 
               <h3>Eligibility assessment</h3>
             </div>
-
-            <p>{results.length} schemes checked</p>
           </div>
-
-          {/* Summary counts */}
-
-          <div className="eligibility-summary">
-            <div>
-              <strong>{summary.eligible}</strong>
-              <span>Potential matches</span>
-            </div>
-
-            <div>
-              <strong>{summary.not_eligible}</strong>
-              <span>Conditions not met</span>
-            </div>
-
-            <div>
-              <strong>
-                {summary.insufficient_information}
-              </strong>
-
-              <span>Need more information</span>
-            </div>
-          </div>
-
-          {/* Individual scheme cards */}
 
           <div className="eligibility-result-list">
             {results.map((result) => (
@@ -764,23 +862,39 @@ export default function EligibilityChecker() {
                   {getStatusExplanation(result.status)}
                 </p>
 
-                {result.reasons.length > 0 && (
-                  <div>
-                    <strong>Assessment details</strong>
+                {(result.conditions_not_met ?? []).length > 0 && (
+                  <div className="eligibility-conditions eligibility-conditions--not-met">
+                    <strong>Why this does not match</strong>
 
                     <ul>
-                      {result.reasons.map((reason, index) => (
-                        <li
-                          key={`${result.scheme_id}-reason-${index}`}
-                        >
-                          {reason}
+                      {result.conditions_not_met.map((text, index) => (
+                        <li key={`${result.scheme_id}-no-${index}`}>
+                          <span aria-hidden="true">✗ </span>
+                          <span className="sr-only">Not met: </span>
+                          {text}
                         </li>
                       ))}
                     </ul>
                   </div>
                 )}
 
-                {result.missing_information.length > 0 && (
+                {(result.conditions_met ?? []).length > 0 && (
+                  <div className="eligibility-conditions eligibility-conditions--met">
+                    <strong>Conditions you meet</strong>
+
+                    <ul>
+                      {result.conditions_met.map((text, index) => (
+                        <li key={`${result.scheme_id}-yes-${index}`}>
+                          <span aria-hidden="true">✓ </span>
+                          <span className="sr-only">Met: </span>
+                          {text}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {(result.missing_information ?? []).length > 0 && (
                   <div>
                     <strong>Information needed</strong>
 

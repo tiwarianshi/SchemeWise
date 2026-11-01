@@ -162,11 +162,20 @@ MAX_RULE_NODES = 200
 
 
 def normalize(value: Any) -> Any:
-    """Normalize strings for case-insensitive comparison."""
+    """Normalize common input aliases for consistent comparisons."""
     if isinstance(value, str):
-        return value.strip().casefold()
+        value = value.strip().casefold()
+
+        aliases = {
+            "graduate": "undergraduate",
+            "ug": "undergraduate",
+            "government": "government school",
+        }
+
+        return aliases.get(value, value)
 
     return value
+
 
 
 def compare_values(

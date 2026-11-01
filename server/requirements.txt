@@ -1,7 +1,7 @@
 fastapi
 uvicorn
 pytest
-httpx2
+httpx
 pymupdf
 tiktoken
 google-genai
