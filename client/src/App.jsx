@@ -1,3 +1,4 @@
+
 import './App.css'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -7,6 +8,7 @@ import HowItWorks from './components/HowItWorks'
 import FinalCta from './components/FinalCta'
 import Footer from './components/Footer'
 import EligibilityChecker from './components/EligibilityChecker'
+import DocumentAssistant from './components/DocumentAssistant'
 
 export default function App() {
   return (
@@ -17,7 +19,8 @@ export default function App() {
         <Hero />
         <Features />
         <SchemesSection />
-         <EligibilityChecker />
+        <EligibilityChecker />
+        <DocumentAssistant />
         <HowItWorks />
         <FinalCta />
       </main>

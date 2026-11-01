@@ -23,8 +23,13 @@ class FakeVectorStore:
 
 
 class FakeGeminiClient:
-    def __init__(self, answer="The document states that students can apply."):
+    def __init__(
+        self,
+        answer="The document states that students can apply.",
+        answer_status="complete",
+    ):
         self.answer = answer
+        self.answer_status = answer_status
         self.called = False
         self.received_prompt = None
         self.received_config = None
@@ -35,11 +40,11 @@ class FakeGeminiClient:
         self.models = Models()
 
         def generate_content(model, contents, config=None):
+            import json
+
             self.called = True
             self.received_prompt = contents
             self.received_config = config
-
-            import json
 
             class Response:
                 pass
@@ -47,7 +52,7 @@ class FakeGeminiClient:
             response = Response()
             response.text = json.dumps({
                 "answer": self.answer,
-                "answer_status": "complete",
+                "answer_status": self.answer_status,
             })
 
             return response
@@ -154,3 +159,75 @@ def test_empty_question_is_rejected():
         assert False, "Expected ValueError"
     except ValueError as error:
         assert "empty" in str(error).lower()
+
+
+def test_complete_answer_status(monkeypatch):
+    monkeypatch.setattr(
+        rag_service,
+        "embed_text",
+        lambda question: [0.1] * 768,
+    )
+
+    vector_store = FakeVectorStore([make_chunk()])
+    gemini = FakeGeminiClient(answer_status="complete")
+
+    service = rag_service.RAGService(
+        vector_store=vector_store,
+        gemini_client=gemini,
+    )
+
+    result = service.ask("How can students apply?")
+
+    assert result["answer_status"] == "complete"
+    assert result["insufficient_information"] is False
+    assert len(result["sources"]) == 1
+
+
+def test_partial_answer_status(monkeypatch):
+    monkeypatch.setattr(
+        rag_service,
+        "embed_text",
+        lambda question: [0.1] * 768,
+    )
+
+    vector_store = FakeVectorStore([make_chunk()])
+    gemini = FakeGeminiClient(
+        answer="The document mentions the application form, but not the complete application process.",
+        answer_status="partial",
+    )
+
+    service = rag_service.RAGService(
+        vector_store=vector_store,
+        gemini_client=gemini,
+    )
+
+    result = service.ask("Explain the complete application process.")
+
+    assert result["answer_status"] == "partial"
+    assert result["insufficient_information"] is False
+    assert len(result["sources"]) == 1
+
+
+def test_insufficient_answer_status(monkeypatch):
+    monkeypatch.setattr(
+        rag_service,
+        "embed_text",
+        lambda question: [0.1] * 768,
+    )
+
+    vector_store = FakeVectorStore([make_chunk()])
+    gemini = FakeGeminiClient(
+        answer="The provided document does not contain enough information.",
+        answer_status="insufficient",
+    )
+
+    service = rag_service.RAGService(
+        vector_store=vector_store,
+        gemini_client=gemini,
+    )
+
+    result = service.ask("What is the exact scholarship amount?")
+
+    assert result["answer_status"] == "insufficient"
+    assert result["insufficient_information"] is True
+    assert len(result["sources"]) == 1
