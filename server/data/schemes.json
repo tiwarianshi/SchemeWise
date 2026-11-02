@@ -1,0 +1,504 @@
+[
+  {
+    "id": "scheme-001",
+    "name": "PM-USP Central Sector Scheme of Scholarship for College and University Students",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "A central scholarship scheme for eligible college and university students.",
+    "benefits": [],
+    "eligibility": [
+      "Must meet the applicable academic merit criteria.",
+      "Must satisfy the current official income and other eligibility conditions.",
+      "Must meet the applicable course, institution and scholarship-specific requirements."
+    ],
+    "required_documents": [],
+    "official_url": "https://scholarships.gov.in/All-Scholarships",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify the current official guidelines and all applicable academic, income, course and institution criteria before encoding structured rules."
+    }
+  },
+  {
+    "id": "scheme-002",
+    "name": "PM YASASVI Top Class Education in Schools for OBC, EBC and DNT Students",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "An education scheme for eligible OBC, EBC and DNT students at covered school levels.",
+    "benefits": [],
+    "eligibility": [
+      "Applicant must belong to a community covered by the applicable scheme guidelines.",
+      "Applicant must satisfy the applicable school-level, income and other eligibility conditions."
+    ],
+    "required_documents": [],
+    "official_url": "https://scholarships.gov.in/All-Scholarships",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify covered communities, school classes, income limits and current scheme status before encoding structured rules."
+    }
+  },
+  {
+    "id": "scheme-003",
+    "name": "PM YASASVI Top Class Education in College for OBC, EBC and DNT Students",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "An education scheme for eligible OBC, EBC and DNT students in covered higher education institutions.",
+    "benefits": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable community criteria.",
+      "Applicant must meet the covered institution, course, income and other scheme conditions."
+    ],
+    "required_documents": [],
+    "official_url": "https://scholarships.gov.in/All-Scholarships",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify the current scheme guidelines, covered institutions, courses and other applicable criteria before encoding structured rules."
+    }
+  },
+  {
+    "id": "scheme-004",
+    "name": "Central Sector Scholarship of Top Class Education for SC Students",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "A central education scholarship for eligible SC students under the applicable guidelines.",
+    "benefits": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable Scheduled Caste eligibility criteria.",
+      "Applicant must meet the prescribed admission, institution, family income and other conditions."
+    ],
+    "required_documents": [],
+    "official_url": "https://scholarships.gov.in/All-Scholarships",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current income thresholds, eligible institutions, admission criteria and other conditions from the official guidelines."
+    }
+  },
+  {
+    "id": "scheme-005",
+    "name": "Pre-Matric Scholarship for Students with Disabilities",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "A scholarship scheme for eligible students with disabilities studying at the applicable pre-matric level.",
+    "benefits": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable disability-related criteria.",
+      "Applicant must meet the prescribed school-level, income and other eligibility conditions."
+    ],
+    "required_documents": [],
+    "official_url": "https://scholarships.gov.in/All-Scholarships",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current disability, school-level, income and certification requirements from official guidelines."
+    }
+  },
+  {
+    "id": "scheme-006",
+    "name": "Post-Matric Scholarship for Students with Disabilities",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "A scholarship scheme for eligible students with disabilities pursuing covered post-matric education.",
+    "benefits": [],
+    "eligibility": [
+      "Applicant must satisfy the applicable disability-related criteria.",
+      "Applicant must be pursuing an eligible course or level of education.",
+      "Applicant must meet the applicable income and other scheme conditions."
+    ],
+    "required_documents": [],
+    "official_url": "https://scholarships.gov.in/All-Scholarships",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current course, disability, income and other requirements from official guidelines."
+    }
+  },
+  {
+    "id": "scheme-007",
+    "name": "Scholarship for Top Class Education for Students with Disabilities",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "A scholarship scheme for eligible students with disabilities pursuing covered higher education.",
+    "benefits": [
+      "Reimbursement of tuition and non-refundable fees, up to the cap in the current guidelines.",
+      "Maintenance allowance: Rs 3,000 per month for hostellers, Rs 1,500 per month for day scholars.",
+      "Special disability allowance: Rs 2,000 per month.",
+      "Books and stationery: Rs 5,000 per year.",
+      "One-time grants: Rs 45,000 for a computer or laptop and Rs 30,000 for aids and assistive devices."
+    ],
+    "eligibility": [
+      "Indian national with a benchmark disability (40% or more) and a valid disability certificate.",
+      "Parents'/guardians' income from all sources not more than Rs 8,00,000 per year.",
+      "Studying a regular, full-time graduate or post-graduate degree or diploma course at an institute notified by DEPwD.",
+      "Not previously awarded this scholarship, not repeating a class, and not more than two children with disabilities of the same parents benefiting (twins excepted).",
+      "Selection is competitive: 300 slots a year, 50% reserved for girls, based on marks in the qualifying examination."
+    ],
+    "required_documents": [
+      "Photograph",
+      "Proof of age",
+      "Disability certificate (UDID card where available)",
+      "Income certificate of parent or guardian",
+      "Tuition fee receipt",
+      "Last academic qualification certificate",
+      "Aadhaar number or enrolment ID"
+    ],
+    "official_url": "https://scholarships.gov.in/All-Scholarships",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": true,
+      "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf",
+      "verified_at": "2026-10-29",
+      "rule": {
+        "all_of": [
+          {
+            "field": "is_indian_national",
+            "operator": "eq",
+            "value": true,
+            "description": "The scholarship is open only to Indian nationals.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "disability_percentage",
+            "operator": "gte",
+            "value": 40,
+            "description": "The student must have a benchmark disability of 40% or more as defined in the Rights of Persons with Disabilities Act, 2016.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "has_valid_disability_certificate",
+            "operator": "eq",
+            "value": true,
+            "description": "The student must hold a valid disability certificate issued by the competent authority.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "annual_family_income",
+            "operator": "lte",
+            "value": 800000,
+            "description": "Parents'/guardians' income from all sources must not exceed Rs 8,00,000 per year.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "education_level",
+            "operator": "in",
+            "value": [
+              "Diploma",
+              "Undergraduate",
+              "Postgraduate"
+            ],
+            "description": "The student must be pursuing a graduate or post-graduate degree or diploma course.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "studying_in_notified_institute",
+            "operator": "eq",
+            "value": true,
+            "description": "The institute must be on the list of Institutes of Excellence notified by DEPwD for this scholarship.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "is_regular_full_time_course",
+            "operator": "eq",
+            "value": true,
+            "description": "Distance-learning, part-time and week-end courses are not covered.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "has_received_top_class_award_before",
+            "operator": "eq",
+            "value": false,
+            "description": "The award is one-time: a student who has already received it cannot be awarded again.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "exceeds_disabled_children_limit_per_parents",
+            "operator": "eq",
+            "value": false,
+            "description": "Not more than two children with disabilities of the same parents can receive benefits under the scheme (twins of the second child are also covered).",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          },
+          {
+            "field": "is_repeating_class",
+            "operator": "eq",
+            "value": false,
+            "description": "The scholarship is not available for a class the student is repeating.",
+            "verified": true,
+            "source_url": "https://scholarships.gov.in/public/schemeGuidelines/DEPDGuidelines.pdf"
+          }
+        ]
+      },
+      "verification_note": "Rules encoded from the DEPwD scheme 'Scholarships for Students with Disabilities' (effective 1 April 2022, hosted on scholarships.gov.in), cl. 1.6, 2(i)-(iv), 3, 14.1, 14.6, and checked against the DEPwD revision of 4 September 2025 and the notified institutes list on the review date. Not encoded as a bar: holding another scholarship (cl. 2(v) lets the student choose one). Selection is competitive (300 slots, 50% for girls, merit) and is not modelled. Re-check every academic year."
+    }
+  },
+  {
+    "id": "scheme-008",
+    "name": "National Means-cum-Merit Scholarship Scheme",
+    "state": "All India",
+    "category": "Education",
+    "beneficiary_group": "Students",
+    "description": "A scholarship scheme for eligible students subject to the applicable merit, income and school-level conditions.",
+    "benefits": [
+      "Rs 12,000 per year (Rs 1,000 per month) for up to four years, Class IX to XII, subject to scheme rules."
+    ],
+    "eligibility": [
+      "Selected through the State/UT Class VIII selection test within the State/UT quota.",
+      "Parental income from all sources not more than Rs 3,50,000 per year.",
+      "Regular student in a Government, Government-aided or local body school (not Kendriya Vidyalaya, Jawahar Navodaya Vidyalaya, residential or private schools).",
+      "At least 55% marks in Class VIII (50% for SC/ST students) and clear promotion to Class IX."
+    ],
+    "required_documents": [],
+    "official_url": "https://scholarships.gov.in/All-Scholarships",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": true,
+      "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf",
+      "verified_at": "2026-10-29",
+      "rule": {
+        "all_of": [
+          {
+            "field": "selected_in_nmmss_state_test",
+            "operator": "eq",
+            "value": true,
+            "description": "The student must have been selected through the State/UT Class VIII selection test (MAT and SAT) within the State/UT quota.",
+            "verified": true,
+            "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+          },
+          {
+            "field": "annual_family_income",
+            "operator": "lte",
+            "value": 350000,
+            "description": "Parental income from all sources must not exceed Rs 3,50,000 per year at the time of selection.",
+            "verified": true,
+            "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+          },
+          {
+            "field": "school_type",
+            "operator": "in",
+            "value": [
+              "Government school",
+              "Government-aided school",
+              "Local body school"
+            ],
+            "description": "The student must study as a regular student in a Government, Government-aided or local body school. Kendriya Vidyalayas, Jawahar Navodaya Vidyalayas, residential schools with boarding and private schools are not eligible.",
+            "verified": true,
+            "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+          },
+          {
+            "any_of": [
+              {
+                "field": "class_8_marks_percentage",
+                "operator": "gte",
+                "value": 55,
+                "description": "The student must have scored at least 55% (or equivalent grade) in the Class VIII examination.",
+                "verified": true,
+                "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+              },
+              {
+                "all_of": [
+                  {
+                    "field": "social_category",
+                    "operator": "in",
+                    "value": [
+                      "SC",
+                      "ST"
+                    ],
+                    "description": "SC/ST students get a 5% relaxation on the Class VIII marks requirement.",
+                    "verified": true,
+                    "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+                  },
+                  {
+                    "field": "class_8_marks_percentage",
+                    "operator": "gte",
+                    "value": 50,
+                    "description": "SC/ST students must have scored at least 50% in the Class VIII examination.",
+                    "verified": true,
+                    "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "field": "promoted_from_class_8_to_9",
+            "operator": "eq",
+            "value": true,
+            "description": "The student must have been cleanly promoted from Class VIII to Class IX to start the scholarship.",
+            "verified": true,
+            "source_url": "https://dsel.education.gov.in/sites/default/files/NMMSS_Guidelines_22.pdf"
+          }
+        ]
+      },
+      "verification_note": "Rules encoded from the NMMSS Revised Guidelines (dsel.education.gov.in), clauses 1.1, 1.2, 2.1, 2.2, 3.1, 3.2, 6.1, for a student STARTING the scholarship in Class IX. NSP shows the scheme open for 2026-27. Not modelled: State/UT reservation and quota norms, and continuation rules (60% in Class X, clear promotion in Classes X and XII). Guideline clause 4.1 (only one central scholarship) is not encoded because NSP's 2026-27 notice allows one merit-based scheme plus welfare-based schemes. Re-check the guidelines and the NSP scheme page every academic year."
+    }
+  },
+  {
+    "id": "scheme-009",
+    "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+    "state": "All India",
+    "category": "Agriculture",
+    "beneficiary_group": "Farmers",
+    "description": "A central government income-support scheme for eligible landholding farmer families, subject to scheme rules and exclusions.",
+    "benefits": [
+      "₹6,000 per year in three equal instalments, subject to eligibility and scheme rules."
+    ],
+    "eligibility": [
+      "Applicant must meet the scheme's applicable landholding farmer-family criteria.",
+      "The farmer family must satisfy applicable exclusion and verification requirements."
+    ],
+    "required_documents": [],
+    "official_url": "https://www.pmkisan.gov.in/",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": true,
+      "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf",
+      "verified_at": "2026-10-28",
+      "rule": {
+        "all_of": [
+          {
+            "field": "has_eligible_landholding",
+            "operator": "eq",
+            "value": true,
+            "description": "The farmer family must own cultivable land recorded in the State/UT land records (held on 1 February 2019, or inherited after the owner's death).",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "is_institutional_landholder",
+            "operator": "eq",
+            "value": false,
+            "description": "Institutional landholders are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_constitutional_post_exclusion_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a former or present holder of a constitutional post are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_elected_official_exclusion_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a former or present minister, MP, MLA, MLC, mayor of a municipal corporation or district panchayat chairperson are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_excluded_government_employee_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a serving or retired government, PSE or autonomous-body officer or employee, or a regular local-body employee, are not eligible (Multi Tasking Staff / Class IV / Group D are excepted).",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_excluded_pensioner_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a retired pensioner drawing Rs 10,000 or more per month are not eligible (Multi Tasking Staff / Class IV / Group D are excepted).",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "paid_income_tax_last_assessment_year_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families in which anyone paid income tax in the last assessment year are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "has_practicing_registered_professional_in_family",
+            "operator": "eq",
+            "value": false,
+            "description": "Families with a practising registered professional (doctor, engineer, lawyer, chartered accountant or architect) are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          },
+          {
+            "field": "is_nri_family",
+            "operator": "eq",
+            "value": false,
+            "description": "New applicants whose family is Non-Resident Indian under the Income Tax Act are not eligible.",
+            "verified": true,
+            "source_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines(English).pdf"
+          }
+        ]
+      },
+      "verification_note": "Rules encoded from the PM-KISAN Operational Guidelines (revised as on 29.03.2020), clauses 3, 4.1, 4.1(c), 5.2-5.3. Before setting rules_complete to true: check the portal's 'Amendment in Operational Guidelines' and 'Clarification' pages for changes after 29.03.2020, and review data/eligibility_verification.md. eKYC, Aadhaar and bank-account requirements are registration steps, not modelled here."
+    }
+  },
+  {
+    "id": "scheme-010",
+    "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+    "state": "All India",
+    "category": "Agriculture",
+    "beneficiary_group": "Farmers",
+    "description": "A government crop-insurance scheme subject to notified crops, areas, seasons and applicable enrolment conditions.",
+    "benefits": [],
+    "eligibility": [
+      "Applicant must meet the applicable farmer and insurable-interest requirements.",
+      "The crop and location must satisfy the applicable notification for the season.",
+      "Applicant must meet the applicable enrolment deadlines and insurance conditions."
+    ],
+    "required_documents": [],
+    "official_url": "https://pmfby.gov.in/",
+    "last_verified": "2026-10-25",
+    "is_sample": false,
+    "eligibility_rules": {
+      "rules_complete": false,
+      "source_url": "",
+      "verified_at": null,
+      "rule": null,
+      "verification_note": "Verify current state and season notifications, eligible crops, enrolment conditions and applicable deadlines before encoding structured rules."
+    }
+  }
+]

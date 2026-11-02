@@ -6,3 +6,7 @@ __pycache__/
 .env
 .env.*
 !.env.example
+server/.venv312/
+server/storage/uploads/
+server/storage/chroma_db/
+server/storage/documents.db
